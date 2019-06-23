@@ -44,11 +44,10 @@ z80_top_direct_n cpu(
 );
 
 // RAM
-wire sram_cs = ~cpu_addr[15];
 wire [7:0] sram_d_out;
 sram ram(
   .clk(clk), .a(cpu_addr[14:0]), .d_in(cpu_data), .d_out(sram_d_out),
-  .ce_n(~sram_cs), .oe_n(cpu_read_n), .we_n(cpu_write_n)
+  .ce_n(1'b0), .oe_n(cpu_read_n), .we_n(cpu_write_n)
 );
 
 endmodule
