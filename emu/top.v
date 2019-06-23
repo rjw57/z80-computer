@@ -41,6 +41,10 @@ always @(posedge clk) begin
   end
 end
 
+wire [7:0] int_data;
+assign int_data[7:5] = 3'h2;
+assign int_data[4:0] = h_low;
+
 // cpu
 wire cpu_read_n;
 wire cpu_write_n;
@@ -50,9 +54,9 @@ wire cpu_m1_n;
 wire cpu_iorq_n;
 wire cpu_int_n = h_int_n;
 wire cpu_int_ack = ~cpu_m1_n && ~cpu_iorq_n;
-wire [7:0] cpu_d_in = sram_d_out;
+wire [7:0] cpu_d_in = cpu_int_ack ? int_data : sram_d_out;
 wire [7:0] cpu_d_out = ~cpu_write_n ? cpu_data : 8'hZZ;
-wire [7:0] cpu_data = ~cpu_read_n ? cpu_d_in : 8'hZZ;
+wire [7:0] cpu_data = cpu_write_n ? cpu_d_in : 8'hZZ;
 wire [15:0] cpu_addr;
 z80_top_direct_n cpu(
   .nRESET(~cpu_reset), .CLK(cpu_clk),
