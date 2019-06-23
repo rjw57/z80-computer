@@ -1,5 +1,6 @@
 TESTBENCH_SOURCES:= \
 	$(wildcard cpu/*.v) \
+	hlinectr.v \
 	sram.v \
 	testbench.v \
 	top.v
@@ -15,7 +16,7 @@ view: testbench.vcd
 .PHONY: view
 
 clean:
-	rm -f testbench.vcd testbench.gtkwave testbench.vvp
+	rm -f testbench.vcd testbench.vvp
 .PHONY: clean
 
 testbench.vvp: $(TESTBENCH_SOURCES) sram.hex

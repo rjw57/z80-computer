@@ -2,9 +2,9 @@ module sram(
   d_in,
   d_out,
   a,
-  CS,
-  WE,
-  OE,
+  ce_n,
+  we_n,
+  oe_n,
   clk
 );
   // parameters for the width
@@ -16,16 +16,16 @@ module sram(
   input [DAT-1:0]       d_in;
   output reg [DAT-1:0]  d_out;
   input [ADR-1:0]       a;
-  input CS, WE, OE, clk;
+  input ce_n, we_n, oe_n, clk;
 
   // internal variables
   reg [DAT-1:0] SRAM [DPTH-1:0];
   always @ (posedge clk)
   begin
-    if (CS == 1'b1) begin
-      if (WE == 1'b1 && OE == 1'b0) begin
+    if (~ce_n) begin
+      if (~we_n && oe_n) begin
         SRAM [a] = d_in;
-      end else if (OE == 1'b1 && WE == 1'b0) begin
+      end else if (~oe_n && we_n) begin
         d_out = SRAM [a];
       end
     end;

@@ -7,10 +7,6 @@ module top(
 input reset;
 input clk;
 
-// cpu clock
-reg cpu_clk;
-always @(posedge clk) cpu_clk <= reset ? 0 : ~cpu_clk;
-
 // cpu reset counter
 reg [3:0] cpu_reset_ctr;
 wire cpu_reset = ~cpu_reset_ctr[3];
@@ -20,6 +16,14 @@ always @(posedge clk) begin
   else
     if(cpu_reset) cpu_reset_ctr <= cpu_reset_ctr + 1;
 end
+
+// horizontal counter
+wire [4:0] h_low;
+wire cpu_clk = h_low[0];
+wire h_end;
+hlinectr hlinectr(
+  .reset(reset), .clk(clk), .low_bits(h_low), .term_cnt(h_end)
+);
 
 // cpu
 wire cpu_read_n;
@@ -44,7 +48,7 @@ wire sram_cs = ~cpu_addr[15];
 wire [7:0] sram_d_out;
 sram ram(
   .clk(clk), .a(cpu_addr[14:0]), .d_in(cpu_data), .d_out(sram_d_out),
-  .CS(sram_cs), .OE(~cpu_read_n), .WE(~cpu_write_n)
+  .ce_n(~sram_cs), .oe_n(cpu_read_n), .we_n(cpu_write_n)
 );
 
 endmodule

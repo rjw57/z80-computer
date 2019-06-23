@@ -1,4 +1,4 @@
-`timescale 1ns/1ns
+`timescale 1ns/10ps
 
 module testbench;
 
@@ -13,10 +13,9 @@ always #CLK_HALF_PERIOD clk <= ~clk;
 always @(posedge clk) cpu_clk <= ~cpu_clk;
 
 // Reset
-reg reset = 1;
-initial begin
-  #100 reset <= 0;
-end
+reg [3:0] reset_ctr = 0;
+wire reset = ~reset_ctr[3];
+always @(posedge clk) reset_ctr <= reset ? reset_ctr + 1 : reset_ctr;
 
 // Top-level module
 top top(.reset(reset), .clk(clk));
@@ -29,7 +28,7 @@ initial begin
 
   $display("Clock half period: ", CLK_HALF_PERIOD, "ns");
 
-  #100000;
+  #70000;
 
   $finish;
 end
