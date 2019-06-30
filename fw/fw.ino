@@ -80,12 +80,13 @@ void setup() {
   digitalWrite(RST_BAR, LOW);
   pinMode(RST_BAR, OUTPUT);
 
-  // Claim bus and wait for claim
+  // "pre-claim bus"
   digitalWrite(CPU_BUSRQ_BAR, LOW);
   pinMode(CPU_BUSRQ_BAR, OUTPUT);
   pinMode(CPU_BUSAK_BAR, INPUT_PULLUP);
 
   // Start processor
+  delay(1);
   digitalWrite(RST_BAR, HIGH);
 
   // Claim bus
