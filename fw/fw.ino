@@ -1,5 +1,7 @@
+#include <avr/pgmspace.h>
+
 #define BUS_SER         5
-#define BUS_OE_BAR      4
+#define BUS_RD_DEV      4
 #define BUS_RCLK        3
 #define BUS_SRCLK       2
 
@@ -7,54 +9,78 @@
 #define CPU_RD_BAR      A4
 #define CLK_SEL         A0
 #define OV_CLK          A1
-#define CPU_A0          10
-#define CPU_A1          11
-#define CPU_A2          12
 
-static bool asserting_data_bus = false;
+// RAM contents
+#define sram_bin ram_contents
+#include "sram_contents.h"
+#undef sram_bin
 
-static bool send_init_loop = true;
-static uint16_t init_sp = 0x1020;
-static uint8_t next_bytes[] = { 0x00, 0x00 };
+const uint16_t ram_contents_len = sizeof(ram_contents) / sizeof(uint8_t);
 
-// The effective code "seen" by the processor is as follows. For the first loop:
-//
-// 0000 LOOP:
-// 0000 31 XX YY              LD   sp,$YYXX
-// 0003 00                    NOP
-// 0004 18 FA                 JR   LOOP
-//
-// For subsequent loops:
-//
-// 0000 LOOP:
-// 0000 21 XX YY              LD   hl,$YYXX
-// 0003 E5                    PUSH hl
-// 0004 18 FA                 JR   LOOP
-uint8_t lookup_code(uint8_t addr) {
-  switch(addr) {
-    case 0x00:
-      return send_init_loop ? 0x31 : 0x21;
-    case 0x01:
-      return send_init_loop ? (init_sp & 0xff) : next_bytes[0];
-    case 0x02:
-      return send_init_loop ? ((init_sp >> 8) & 0xff) : next_bytes[1];
-    case 0x03:
-      return send_init_loop ? 0x00 : 0xe5;
-    case 0x04:
-      return 0x18;
-    case 0x05:
-      return 0xfa;
-    default:
-      return 0x00;
-  }
+// Prepare for LDIR instruction for writing to memory. Resets BC and DE to zero
+// so that LDIR writes to RAM starting from address $0000. We feed the LDIR
+// instruction data directly in order so we don't care about the value of HL.
+const PROGMEM uint8_t init_code[] = {
+  0xf3,               // DI
+  0x01, 0x00, 0x00,   // LD bc, $0000
+  0x11, 0x00, 0x00,   // LD de, $0000
+};
+const uint8_t init_code_len = sizeof(init_code) / sizeof(uint8_t);
+
+static uint8_t init_code_bytes_sent;
+static uint8_t ldir_state = 0;
+static uint8_t next_byte = 0x00;
+static uint16_t ram_bytes_sent;
+
+void copy_loop_reset() {
+  next_byte = 0x00;
+  init_code_bytes_sent = 0;
+  ram_bytes_sent = 0;
+  ldir_state = 0;
+  set_data(next_byte);
 }
 
-uint8_t read_addr() {
-  uint8_t addr = 0x00;
-  if(digitalRead(CPU_A0) == HIGH) { addr |= 0x01; }
-  if(digitalRead(CPU_A1) == HIGH) { addr |= 0x02; }
-  if(digitalRead(CPU_A2) == HIGH) { addr |= 0x04; }
-  return addr;
+void copy_loop_advance() {
+  if(init_code_bytes_sent < init_code_len) {
+    next_byte = pgm_read_byte_near(init_code + init_code_bytes_sent);
+    ++init_code_bytes_sent;
+    return;
+  }
+
+  switch(ldir_state) {
+    case 0:
+      next_byte = 0xed; // First LDIR instruction
+      ++ldir_state;
+      return;
+    case 1:
+      next_byte = 0xb0;
+      ldir_state = 4;
+      return;
+    case 2:
+      next_byte = 0xed; // Subsequent LDIR instructions
+      ++ldir_state;
+      return;
+    case 3:
+      next_byte = 0xb0;
+      ++ram_bytes_sent;
+      ++ldir_state;
+      return;
+    case 4:
+      next_byte = pgm_read_byte_near(ram_contents + ram_bytes_sent);
+      ldir_state = 2;
+      return;
+  }
+
+  // Fall-through: send NOPs
+  next_byte = 0x00;
+}
+
+void claim_read_dev() {
+  digitalWrite(BUS_RD_DEV, LOW);
+}
+
+void release_read_dev() {
+  digitalWrite(BUS_RD_DEV, HIGH);
 }
 
 // Set data bus value. Output depends on state of BUS_OE_BAR pin.
@@ -64,69 +90,71 @@ void set_data(uint8_t data) {
   digitalWrite(BUS_RCLK, LOW);
 }
 
-void update_bus_assertion() {
-  bool should_assert = (
-      asserting_data_bus && (digitalRead(CPU_RD_BAR) == LOW) &&
-      (digitalRead(CLK_SEL) == LOW)
-  );
-  digitalWrite(BUS_OE_BAR, should_assert ? LOW : HIGH);
-}
-
-void assert_data_bus() {
-  asserting_data_bus = true;
-  update_bus_assertion();
-}
-
-void release_data_bus() {
-  asserting_data_bus = false;
-  update_bus_assertion();
-}
-
 // Override crystal-based clock. CPU clock is now OV_CLK output.
-void claimClock() {
+void claim_clock() {
   digitalWrite(OV_CLK, LOW);
   digitalWrite(CLK_SEL, LOW);
 }
 
 // Release CPU clock. Clock is now crystal.
-void releaseClock() {
+void release_clock() {
   digitalWrite(CLK_SEL, HIGH);
 }
 
 void tick_update() {
-  update_bus_assertion();
-  uint8_t addr = read_addr();
-  set_data(lookup_code(addr));
-  if((digitalRead(CPU_RD_BAR) == LOW) && (addr >= 0x04)) {
-    send_init_loop = false;
+  static bool prev_rd = false;
+  bool rd = digitalRead(CPU_RD_BAR) == LOW;
+  if(!rd && prev_rd) {
+    copy_loop_advance();
+    set_data(next_byte);
   }
+  prev_rd = rd;
+}
+
+// Set reset. Note that reset must be active for a minimum of 3 cycles.
+// Should be called with clock claimed to have effect.
+void reset_on() {
+  digitalWrite(RST_BAR, LOW);
+  set_data(0x00);
+  for(int i=0; i<5; ++i) {
+    digitalWrite(OV_CLK, HIGH);
+    digitalWrite(OV_CLK, LOW);
+  }
+}
+
+// Release reset.
+void reset_off() {
+  digitalWrite(RST_BAR, HIGH);
 }
 
 // Tick the CPU clock
 void tick() {
   digitalWrite(OV_CLK, HIGH);
-  tick_update();
   digitalWrite(OV_CLK, LOW);
   tick_update();
 }
 
 void setup() {
-  // Setup address bus
-  pinMode(CPU_A0, INPUT);
-  pinMode(CPU_A1, INPUT);
-  pinMode(CPU_A2, INPUT);
+  Serial.begin(9600);
+  while (!Serial);  // wait for serial port to connect. Needed for native USB
+
+  // Reset memory image copy code loop
+  copy_loop_reset();
+
+  // Setup CPU control lines
+  pinMode(CPU_RD_BAR, INPUT);
 
   // Setup clock override pins
   pinMode(OV_CLK, OUTPUT);
   pinMode(CLK_SEL, OUTPUT);
 
-  // Ensure bus is not being asserted.
+  // Ensure we are the read device and set up data bus
   digitalWrite(BUS_SER, LOW);
   pinMode(BUS_SER, OUTPUT);
-  digitalWrite(BUS_OE_BAR, HIGH);
-  pinMode(BUS_RCLK, OUTPUT);
   digitalWrite(BUS_RCLK, LOW);
-  pinMode(BUS_OE_BAR, OUTPUT);
+  pinMode(BUS_RCLK, OUTPUT);
+  claim_read_dev();
+  pinMode(BUS_RD_DEV, OUTPUT);
   digitalWrite(BUS_SRCLK, LOW);
   pinMode(BUS_SRCLK, OUTPUT);
 
@@ -134,19 +162,20 @@ void setup() {
   digitalWrite(RST_BAR, LOW);
   pinMode(RST_BAR, OUTPUT);
 
-  // Output NOPs
-  set_data(0x00);
-  assert_data_bus();
-
-  claimClock();
+  claim_clock();
+  reset_on();
+  reset_off();
   digitalWrite(RST_BAR, HIGH);
 
-  while(1) {
+  do {
     tick();
-  //  delay(100);
-  }
+    // delay(100);
+  } while(ram_bytes_sent < ram_contents_len);
 
-  releaseClock();
+  reset_on();
+  release_read_dev();
+  release_clock();
+  reset_off();
 }
 
 void loop() {}

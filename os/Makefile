@@ -10,18 +10,21 @@ LDFLAGS:=
 SOURCES:=$(wildcard *.c) $(wildcard *.s)
 OBJECTS:=$(patsubst %.c,%.rel,$(SOURCES)) $(patsubst %.s,%.rel,$(SOURCES))
 
-all: sram.hex
+all: sram.hex sram_contents.h
 .DEFAULT: all
 .PHONY: all
 
 sram.ihx sram.map: $(OBJECTS) Makefile
 	$(CC) $(LDFLAGS) -o "$@" $(filter %.asm,$^) $(filter %.rel,$^)
 
+%_contents.h: %.bin
+	xxd -i "$<" | sed -e 's/unsigned char/const PROGMEM uint8_t/' >"$@"
+
 %.hex: %.bin
 	xxd -ps -c 1 -g 1 "$<" "$@"
 
 %.bin: %.ihx
-	$(MAKEBIN) -s 32768 "$<" "$@"
+	$(MAKEBIN) -s 1024 "$<" "$@"
 
 %.rel: %.s Makefile
 	$(AS) $(ASFLAGS) -o "$*" $<
