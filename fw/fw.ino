@@ -1,9 +1,13 @@
 #include <avr/pgmspace.h>
 
-#define BUS_SER         5
-#define BUS_RD_DEV      4
-#define BUS_RCLK        3
-#define BUS_SRCLK       2
+#define IO_ACK_BAR      9
+#define SR_CLK          8
+#define SR_MODE         7
+#define SR_OUT          6
+#define SR_SER          5
+#define RD_DEV          4
+
+#define CPU_IOREQ_BAR   2
 
 #define RST_BAR         A5
 #define CPU_RD_BAR      A4
@@ -76,18 +80,26 @@ void copy_loop_advance() {
 }
 
 void claim_read_dev() {
-  digitalWrite(BUS_RD_DEV, LOW);
+  digitalWrite(RD_DEV, LOW);
 }
 
 void release_read_dev() {
-  digitalWrite(BUS_RD_DEV, HIGH);
+  digitalWrite(RD_DEV, HIGH);
 }
 
 // Set data bus value. Output depends on state of BUS_OE_BAR pin.
 void set_data(uint8_t data) {
-  shiftOut(BUS_SER, BUS_SRCLK, MSBFIRST, data);
-  digitalWrite(BUS_RCLK, HIGH);
-  digitalWrite(BUS_RCLK, LOW);
+  digitalWrite(SR_MODE, LOW); // shifting data
+  shiftOut(SR_SER, SR_CLK, MSBFIRST, data);
+}
+
+// Read data bus value.
+uint8_t read_data() {
+  digitalWrite(SR_MODE, HIGH); // load
+  digitalWrite(SR_CLK, HIGH);
+  digitalWrite(SR_CLK, LOW);
+  digitalWrite(SR_MODE, LOW); // read
+  return shiftIn(SR_OUT, SR_CLK, MSBFIRST);
 }
 
 // Override crystal-based clock. CPU clock is now OV_CLK output.
@@ -134,6 +146,20 @@ void tick() {
   tick_update();
 }
 
+void io_request_handler() {
+  // TODO: BROKEN
+
+  // Resume CPU
+  claim_clock();
+  digitalWrite(IO_ACK_BAR, LOW);
+  while(digitalRead(CPU_IOREQ_BAR) == LOW) {
+    digitalWrite(OV_CLK, HIGH);
+    digitalWrite(OV_CLK, LOW);
+  }
+  digitalWrite(IO_ACK_BAR, HIGH);
+  release_clock();
+}
+
 void setup() {
   Serial.begin(9600);
   while (!Serial);  // wait for serial port to connect. Needed for native USB
@@ -149,18 +175,28 @@ void setup() {
   pinMode(CLK_SEL, OUTPUT);
 
   // Ensure we are the read device and set up data bus
-  digitalWrite(BUS_SER, LOW);
-  pinMode(BUS_SER, OUTPUT);
-  digitalWrite(BUS_RCLK, LOW);
-  pinMode(BUS_RCLK, OUTPUT);
+  pinMode(SR_OUT, INPUT);
+  digitalWrite(SR_SER, LOW);
+  pinMode(SR_SER, OUTPUT);
+  digitalWrite(SR_CLK, LOW);
+  pinMode(SR_CLK, OUTPUT);
   claim_read_dev();
-  pinMode(BUS_RD_DEV, OUTPUT);
-  digitalWrite(BUS_SRCLK, LOW);
-  pinMode(BUS_SRCLK, OUTPUT);
+  pinMode(RD_DEV, OUTPUT);
+  digitalWrite(SR_MODE, LOW); // shifting data
+  pinMode(SR_MODE, OUTPUT);
 
   // Ensure CPU is in RESET state.
   digitalWrite(RST_BAR, LOW);
   pinMode(RST_BAR, OUTPUT);
+
+  // Ensure CPU is not in WAIT state
+  digitalWrite(IO_ACK_BAR, LOW);
+  pinMode(IO_ACK_BAR, OUTPUT);
+  digitalWrite(IO_ACK_BAR, HIGH);
+
+  // Connect port IO handler
+  pinMode(CPU_IOREQ_BAR, INPUT);
+  //attachInterrupt(0, io_request_handler, FALLING);
 
   claim_clock();
   reset_on();
@@ -169,7 +205,6 @@ void setup() {
 
   do {
     tick();
-    // delay(100);
   } while(ram_bytes_sent < ram_contents_len);
 
   reset_on();
@@ -178,6 +213,19 @@ void setup() {
   reset_off();
 }
 
-void loop() {}
+void loop() {
+  /*
+  static bool prev_ioreq = false;
+  bool ioreq = digitalRead(CPU_IOREQ_BAR) == LOW;
+
+  if(ioreq && !prev_ioreq) {
+    io_request_handler();
+    prev_ioreq = false;
+    return;
+  }
+
+  prev_ioreq = ioreq;
+  */
+}
 
 // vim:sw=2:sts=2:et
