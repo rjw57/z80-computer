@@ -97,9 +97,17 @@ void set_data(uint8_t data) {
 uint8_t read_data() {
   digitalWrite(SR_MODE, HIGH); // load
   digitalWrite(SR_CLK, HIGH);
-  digitalWrite(SR_CLK, LOW);
+
+  // At this point the SR_OUT pin *already* has the MSB of the data bus on it so
+  // don't reset the clock pin. That way shiftIn reads data after the *falling*
+  // edge so we don't miss the MSB
   digitalWrite(SR_MODE, LOW); // read
-  return shiftIn(SR_OUT, SR_CLK, MSBFIRST);
+  uint8_t data = shiftIn(SR_OUT, SR_CLK, MSBFIRST);
+
+  // Now reset the clock pin
+  digitalWrite(SR_CLK, LOW);
+
+  return data;
 }
 
 // Override crystal-based clock. CPU clock is now OV_CLK output.
@@ -147,17 +155,12 @@ void tick() {
 }
 
 void io_request_handler() {
-  // TODO: BROKEN
+  //read_data();
+  Serial.println(read_data(), HEX);
 
   // Resume CPU
-  claim_clock();
   digitalWrite(IO_ACK_BAR, LOW);
-  while(digitalRead(CPU_IOREQ_BAR) == LOW) {
-    digitalWrite(OV_CLK, HIGH);
-    digitalWrite(OV_CLK, LOW);
-  }
   digitalWrite(IO_ACK_BAR, HIGH);
-  release_clock();
 }
 
 void setup() {
@@ -189,9 +192,11 @@ void setup() {
   digitalWrite(RST_BAR, LOW);
   pinMode(RST_BAR, OUTPUT);
 
-  // Ensure CPU is not in WAIT state
+  // Ensure CPU is not in WAIT state by pulsing IO_ACK_BAR low
   digitalWrite(IO_ACK_BAR, LOW);
   pinMode(IO_ACK_BAR, OUTPUT);
+  digitalWrite(IO_ACK_BAR, HIGH);
+  digitalWrite(IO_ACK_BAR, LOW);
   digitalWrite(IO_ACK_BAR, HIGH);
 
   // Connect port IO handler
@@ -214,7 +219,6 @@ void setup() {
 }
 
 void loop() {
-  /*
   static bool prev_ioreq = false;
   bool ioreq = digitalRead(CPU_IOREQ_BAR) == LOW;
 
@@ -225,7 +229,6 @@ void loop() {
   }
 
   prev_ioreq = ioreq;
-  */
 }
 
 // vim:sw=2:sts=2:et
