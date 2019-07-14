@@ -431,8 +431,6 @@ Wire Wire Line
 	900  2500 1200 2500
 Wire Wire Line
 	1100 2400 1200 2400
-NoConn ~ 1200 2200
-NoConn ~ 1200 2300
 NoConn ~ 1200 2600
 NoConn ~ 1200 2700
 $Comp
@@ -495,8 +493,6 @@ Wire Wire Line
 	1150 7050 1150 7000
 Wire Wire Line
 	1150 7000 1200 7000
-Text GLabel 1100 6400 0    50   Input ~ 0
-RD_DEV
 Text GLabel 1100 7200 0    50   Input ~ 0
 ~RD
 Wire Wire Line
@@ -549,14 +545,10 @@ Text GLabel 2300 2100 2    50   Output ~ 0
 SR_MODE
 Text GLabel 2300 2200 2    50   Output ~ 0
 SR_CLK
-Text GLabel 2300 1800 2    50   Output ~ 0
-RD_DEV
 Wire Wire Line
 	2300 2100 2200 2100
 Wire Wire Line
 	2200 2200 2300 2200
-Wire Wire Line
-	2300 1800 2200 1800
 Wire Wire Line
 	2200 1900 2300 1900
 NoConn ~ 2200 2400
@@ -953,7 +945,7 @@ Wire Wire Line
 	8200 6000 8200 6100
 Wire Wire Line
 	8200 5100 8200 5200
-Text GLabel 3500 3650 0    50   Output ~ 0
+Text GLabel 3100 3650 0    50   Output ~ 0
 ~IO_REQ
 Wire Wire Line
 	3600 3600 3550 3600
@@ -974,7 +966,7 @@ Text GLabel 2300 2300 2    50   Output ~ 0
 Wire Wire Line
 	2300 2300 2200 2300
 NoConn ~ 2200 1700
-Text GLabel 2300 1600 2    50   Input ~ 0
+Text GLabel 2300 1600 2    50   BiDi ~ 0
 ~IO_REQ
 Wire Wire Line
 	2300 1600 2200 1600
@@ -1085,10 +1077,10 @@ NoConn ~ 10900 5200
 Text GLabel 6000 1400 0    50   Output ~ 0
 ~RST
 $Comp
-L Device:R R?
+L Device:R R2
 U 1 1 5D4A0E06
 P 6250 1400
-F 0 "R?" V 6043 1400 50  0000 C CNN
+F 0 "R2" V 6043 1400 50  0000 C CNN
 F 1 "47K" V 6134 1400 50  0000 C CNN
 F 2 "" V 6180 1400 50  0001 C CNN
 F 3 "~" H 6250 1400 50  0001 C CNN
@@ -1100,14 +1092,66 @@ Wire Wire Line
 Wire Wire Line
 	6100 1400 6000 1400
 $Comp
-L power:GND #PWR?
+L power:GND #PWR013
 U 1 1 5D4B4F94
 P 6500 1400
-F 0 "#PWR?" H 6500 1150 50  0001 C CNN
+F 0 "#PWR013" H 6500 1150 50  0001 C CNN
 F 1 "GND" H 6505 1227 50  0000 C CNN
 F 2 "" H 6500 1400 50  0001 C CNN
 F 3 "" H 6500 1400 50  0001 C CNN
 	1    6500 1400
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:R R1
+U 1 1 5D2BCE88
+P 6250 1900
+F 0 "R1" V 6050 1900 50  0000 C CNN
+F 1 "47K" V 6150 1900 50  0000 C CNN
+F 2 "" V 6180 1900 50  0001 C CNN
+F 3 "~" H 6250 1900 50  0001 C CNN
+	1    6250 1900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3100 3650 3200 3650
+Text GLabel 1100 6400 0    50   Input ~ 0
+~IO_REQ
+Text GLabel 6000 1900 0    50   Output ~ 0
+~IO_REQ
+Wire Wire Line
+	6000 1900 6100 1900
+Wire Wire Line
+	6500 1900 6400 1900
+$Comp
+L power:+5V #PWR?
+U 1 1 5D2FB87F
+P 6500 1900
+F 0 "#PWR?" H 6500 1750 50  0001 C CNN
+F 1 "+5V" H 6515 2073 50  0000 C CNN
+F 2 "" H 6500 1900 50  0001 C CNN
+F 3 "" H 6500 1900 50  0001 C CNN
+	1    6500 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Diode:1N4148 D?
+U 1 1 5D2FBB80
+P 3350 3650
+F 0 "D?" H 3200 3750 50  0000 C CNN
+F 1 "1N4148" H 3450 3750 50  0000 C CNN
+F 2 "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal" H 3350 3475 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/1N4148_1N4448.pdf" H 3350 3650 50  0001 C CNN
+	1    3350 3650
+	-1   0    0    1   
+$EndComp
+NoConn ~ 2200 1800
+Text GLabel 900  2300 0    50   Input ~ 0
+~WR
+Text GLabel 700  2200 0    50   Input ~ 0
+A0
+Wire Wire Line
+	900  2300 1200 2300
+Wire Wire Line
+	1200 2200 700  2200
 $EndSCHEMATC

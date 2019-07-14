@@ -5,12 +5,13 @@
 #define SR_MODE         7
 #define SR_OUT          6
 #define SR_SER          5
-#define RD_DEV          4
 
 #define CPU_IOREQ_BAR   2
 
 #define RST_BAR         A5
 #define CPU_RD_BAR      A4
+#define CPU_WR_BAR      A3
+#define CPU_A0          A2
 #define CLK_SEL         A0
 #define OV_CLK          A1
 
@@ -80,11 +81,15 @@ void copy_loop_advance() {
 }
 
 void claim_read_dev() {
-  digitalWrite(RD_DEV, LOW);
+  // the CPU IO_REQ pin is protected by a diode and a pull-up so we can override
+  // it safely. We do so here so that the data bus is always driven by the
+  // Arduino when reading.
+  digitalWrite(CPU_IOREQ_BAR, LOW);
+  pinMode(CPU_IOREQ_BAR, OUTPUT);
 }
 
 void release_read_dev() {
-  digitalWrite(RD_DEV, HIGH);
+  pinMode(CPU_IOREQ_BAR, INPUT);
 }
 
 // Set data bus value. Output depends on state of BUS_OE_BAR pin.
@@ -155,8 +160,7 @@ void tick() {
 }
 
 void io_request_handler() {
-  //read_data();
-  Serial.println(read_data(), HEX);
+  read_data();
 
   // Resume CPU
   digitalWrite(IO_ACK_BAR, LOW);
@@ -172,6 +176,9 @@ void setup() {
 
   // Setup CPU control lines
   pinMode(CPU_RD_BAR, INPUT);
+  pinMode(CPU_WR_BAR, INPUT);
+  pinMode(CPU_A0, INPUT);
+  pinMode(CPU_IOREQ_BAR, INPUT);
 
   // Setup clock override pins
   pinMode(OV_CLK, OUTPUT);
@@ -184,7 +191,6 @@ void setup() {
   digitalWrite(SR_CLK, LOW);
   pinMode(SR_CLK, OUTPUT);
   claim_read_dev();
-  pinMode(RD_DEV, OUTPUT);
   digitalWrite(SR_MODE, LOW); // shifting data
   pinMode(SR_MODE, OUTPUT);
 
@@ -199,10 +205,6 @@ void setup() {
   digitalWrite(IO_ACK_BAR, LOW);
   digitalWrite(IO_ACK_BAR, HIGH);
 
-  // Connect port IO handler
-  pinMode(CPU_IOREQ_BAR, INPUT);
-  //attachInterrupt(0, io_request_handler, FALLING);
-
   claim_clock();
   reset_on();
   reset_off();
@@ -215,10 +217,15 @@ void setup() {
   reset_on();
   release_read_dev();
   release_clock();
+
+  // Connect IOREQ handler
+  attachInterrupt(0, io_request_handler, FALLING);
+
   reset_off();
 }
 
 void loop() {
+  /*
   static bool prev_ioreq = false;
   bool ioreq = digitalRead(CPU_IOREQ_BAR) == LOW;
 
@@ -229,6 +236,7 @@ void loop() {
   }
 
   prev_ioreq = ioreq;
+  */
 }
 
 // vim:sw=2:sts=2:et

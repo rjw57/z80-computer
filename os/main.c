@@ -1,5 +1,5 @@
 void main(void) {
-  int i, j;
+  unsigned int i, j;
   static __sfr __at 0x10 io_port;
 
   /*
@@ -9,8 +9,14 @@ void main(void) {
   */
   __asm__("ei");
 
-  for(i=0; i<0x100; ++i) {
-    io_port = i;
+  while(1) {
+    for(i=0; i<0x100; ++i) {
+      io_port = i;
+    }
+
+    for(j=0; j<10; ++j) {
+      i=0; do { ++i; } while(i != 0);
+    }
   }
 
   while(1) {
