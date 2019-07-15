@@ -1,6 +1,7 @@
 void main(void) {
   unsigned int i, j;
-  static __sfr __at 0x10 io_port;
+  static __sfr __at 0x7 port_a;
+  static __sfr __at 0x0 io_port;
 
   /*
   __asm__("im 2"); // mode 2 interrupts
@@ -9,13 +10,14 @@ void main(void) {
   */
   __asm__("ei");
 
+  port_a = 0;
+
   while(1) {
     for(i=0; i<0x100; ++i) {
-      io_port = i;
-    }
+      //io_port = i;
+      port_a = i;
 
-    for(j=0; j<10; ++j) {
-      i=0; do { ++i; } while(i != 0);
+      j=0; do { ++j; } while(j != 0);
     }
   }
 
