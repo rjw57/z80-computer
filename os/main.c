@@ -1,6 +1,6 @@
 void main(void) {
   unsigned int i, j;
-  static __sfr __at 0x7 port_a;
+  static __sfr __at 0x1 port_a;
   static __sfr __at 0x0 io_port;
 
   /*
@@ -12,13 +12,11 @@ void main(void) {
 
   port_a = 0;
 
-  while(1) {
-    for(i=0; i<0x100; ++i) {
-      //io_port = i;
-      port_a = i;
+  for(;;++i) {
+    port_a = i & 0xff;
+    // io_port = i & 0xff;
 
-      j=0; do { ++j; } while(j != 0);
-    }
+    j=0; do { } while(++j != 0x1000);
   }
 
   while(1) {

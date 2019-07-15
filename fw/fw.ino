@@ -159,8 +159,22 @@ void tick() {
   tick_update();
 }
 
+static bool should_handle_io_request = false;
+
 void io_request_handler() {
-  read_data();
+  should_handle_io_request = true;
+}
+
+void io_request_handler_bottom() {
+  static uint8_t io_ctr = 0;
+
+  should_handle_io_request = false;
+
+  if(digitalRead(CPU_RD_BAR) == LOW) {
+    set_data(io_ctr++);
+  } else if(digitalRead(CPU_WR_BAR) == LOW) {
+    Serial.println(read_data(), HEX);
+  }
 
   // Resume CPU
   digitalWrite(IO_ACK_BAR, LOW);
@@ -221,22 +235,15 @@ void setup() {
   // Connect IOREQ handler
   attachInterrupt(0, io_request_handler, FALLING);
 
+  // wnsure we're not in a wait state
+  digitalWrite(IO_ACK_BAR, LOW);
+  digitalWrite(IO_ACK_BAR, HIGH);
+
   reset_off();
 }
 
 void loop() {
-  /*
-  static bool prev_ioreq = false;
-  bool ioreq = digitalRead(CPU_IOREQ_BAR) == LOW;
-
-  if(ioreq && !prev_ioreq) {
-    io_request_handler();
-    prev_ioreq = false;
-    return;
-  }
-
-  prev_ioreq = ioreq;
-  */
+  if(should_handle_io_request) { io_request_handler_bottom(); }
 }
 
 // vim:sw=2:sts=2:et
