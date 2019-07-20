@@ -175,7 +175,6 @@ Connection ~ 4500 6200
 Wire Wire Line
 	4500 6200 4500 6300
 NoConn ~ 5550 6500
-NoConn ~ 5550 6300
 NoConn ~ 5550 6200
 NoConn ~ 5550 6100
 Text GLabel 5650 6000 2    50   Output ~ 0
@@ -539,7 +538,7 @@ Wire Wire Line
 	2250 6400 2250 6350
 Wire Wire Line
 	2250 6350 2300 6350
-Text GLabel 2300 1900 2    50   Output ~ 0
+Text GLabel 2300 2500 2    50   Output ~ 0
 SR_SER
 Text GLabel 2300 2100 2    50   Output ~ 0
 SR_MODE
@@ -550,9 +549,7 @@ Wire Wire Line
 Wire Wire Line
 	2200 2200 2300 2200
 Wire Wire Line
-	2200 1900 2300 1900
-NoConn ~ 2200 2400
-NoConn ~ 2200 2500
+	2200 2500 2300 2500
 NoConn ~ 2200 2600
 NoConn ~ 2200 2700
 NoConn ~ 2200 1400
@@ -1145,7 +1142,6 @@ F 3 "http://www.nxp.com/documents/data_sheet/1N4148_1N4448.pdf" H 3350 3650 50  
 	1    3350 3650
 	-1   0    0    1   
 $EndComp
-NoConn ~ 2200 1800
 Text GLabel 900  2300 0    50   Input ~ 0
 ~WR
 Text GLabel 700  2200 0    50   Input ~ 0
@@ -1419,4 +1415,20 @@ Wire Wire Line
 	10700 1000 10700 1100
 Text Notes 1950 6050 0    50   ~ 0
 BUG: cannot read from Arduino via IO port
+Text GLabel 5650 6300 2    50   Output ~ 0
+CLK_CHAR
+Wire Wire Line
+	5650 6300 5550 6300
+Text GLabel 2300 1800 2    50   Input ~ 0
+CLK_CHAR
+Wire Wire Line
+	2200 1800 2300 1800
+Text GLabel 2300 1900 2    50   Output ~ 0
+HSYNC
+Wire Wire Line
+	2200 1900 2300 1900
+Text GLabel 2300 2400 2    50   Output ~ 0
+VSYNC
+Wire Wire Line
+	2300 2400 2200 2400
 $EndSCHEMATC

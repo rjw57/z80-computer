@@ -1,10 +1,13 @@
 #include <avr/pgmspace.h>
 
+#define HSYNC           5 // =OC0B, fixed by hardware
+#define VSYNC           10 // =OC1B, fixed by hardware
+
+#define SR_SER          11
 #define IO_ACK_BAR      9
 #define SR_CLK          8
 #define SR_MODE         7
 #define SR_OUT          6
-#define SR_SER          5
 
 #define CPU_IOREQ_BAR   2
 
@@ -21,6 +24,38 @@
 #undef sram_bin
 
 const uint16_t ram_contents_len = sizeof(ram_contents) / sizeof(uint8_t);
+
+// Video timing: 640x480 VGA @ 60Hz
+const double dot_clock_freq       = 25.175;           // MHz
+const int h_visible_area          = 640;              // pixels
+const int h_front_porch           = 16;               // pixels
+const int h_sync_width            = 96;               // pixels
+const int h_back_porch            = 48;               // pixels
+const int h_polarity              = -1;               // sign
+
+const int v_visible_area          = 480;              // lines
+const int v_front_porch           = 10;               // lines
+const int v_sync_width            = 2;                // lines
+const int v_back_porch            = 33;               // lines
+const int v_polarity              = -1;               // sign
+
+// Derived timings
+const double h_visible_area_t     = h_visible_area / dot_clock_freq;  // µs
+const double h_front_porch_t      = h_front_porch / dot_clock_freq;   // µs
+const double h_sync_width_t       = h_sync_width / dot_clock_freq;    // µs
+const double h_back_porch_t       = h_back_porch / dot_clock_freq;    // µs
+
+const double hvis_inactive_width  =
+    h_sync_width_t + h_front_porch_t + h_back_porch_t;
+const double hvis_inactive_offset =
+    0.5 * (h_back_porch_t - h_front_porch_t);
+const double whole_line           =
+    h_visible_area_t + h_front_porch_t + h_sync_width_t + h_back_porch_t;
+const uint16_t whole_frame             =
+    v_visible_area + v_front_porch + v_sync_width + v_back_porch;
+
+// Counter timer
+const double timer_freq           = dot_clock_freq / 16;   // MHz
 
 // Prepare for LDIR instruction for writing to memory. Resets BC and DE to zero
 // so that LDIR writes to RAM starting from address $0000. We feed the LDIR
@@ -184,6 +219,82 @@ void io_request_handler_bottom() {
 void setup() {
   Serial.begin(9600);
   while (!Serial);  // wait for serial port to connect. Needed for native USB
+
+  // Reset all timers and halt them
+  GTCCR = _BV(TSM) | _BV(PSRASY) | _BV(PSRSYNC);
+
+  // Arduino sets up some timers so we should make sure to change the timer
+  // control registers before any of OCRxx.
+
+  // Timer 0: HSYNC
+
+  // Phase correct PWM, TOP = OCR0A, external rising edge clock, no pre-scaling,
+  // OC0B pin is RESET when match on counting UP and SET when match on counting
+  // DOWN for +ve HSYNC polarity. (Opposite for -ve.)
+  TCCR0A = _BV(COM0B1) | _BV(WGM00) | ((h_polarity < 0) ? _BV(COM2B0) : 0);
+  TCCR0B = _BV(WGM02) | _BV(CS02) | _BV(CS01) | _BV(CS00);
+
+  // We use phase correct operation so the counter counts up from BOTTOM to TOP
+  // and back down. Both BOTTOM and TOP are present for one counter cycle so the
+  // number of cycles for each period is 2*(TOP-BOTTOM).
+  //
+  // BOTTOM is 0 and TOP and so the period, T, is 2*TOP/f where f is the counter
+  // frequency. Therefore:
+  const int top = whole_line * timer_freq / 2.;
+  OCR0A = top;
+
+  // We use the phase-correct PWM mode so the pulse width will be 2*COMPARE/f
+  // and so, COMPARE = width * f / 2.
+
+  // Set HSYNC pulse width,
+  OCR0B = (int)(h_sync_width_t * timer_freq / 2.);
+
+  // Timer 1: VSYNC
+
+  // T1 == OC0B which is HSYNC so we can use it as a clock which is a happy
+  // co-incidence.
+
+  // Fast PWM, TOP = OCR1A
+  TCCR1A = _BV(WGM11) | _BV(WGM10);
+  TCCR1B = _BV(WGM13) | _BV(WGM12);
+
+  if(v_polarity < 0) {
+    // Set OC1B on match, clear at bottom.
+    TCCR1A |= _BV(COM1B1) | _BV(COM1B0);
+  } else {
+    // Clear OC1B on match, set at bottom.
+    TCCR1A |= _BV(COM1B1);
+  }
+
+  // Depending on polarity of HSYNC, clock on rising or falling edge of T1 (aka
+  // HSYNC).
+  if(h_polarity < 0) {
+    // Clock on falling edge of T1.
+    TCCR1B |= _BV(CS12) | _BV(CS11);
+  } else {
+    // Clock on rising edge of T1.
+    TCCR1B |= _BV(CS12) | _BV(CS11) | _BV(CS10);
+  }
+
+  // TOP/OCR1A is set to the total size of the frame in lines minus 1 since it
+  // is zero based.
+  OCR1A = whole_frame - 1;
+
+  // OCR1B is set to the pulse width minus 1 since it is zero based.
+  OCR1B = v_sync_width - 1;
+
+  // Set initial timer values
+  TCNT0 = 0;
+  TCNT1 = 0;
+
+  // Set HSYNC as output
+  pinMode(HSYNC, OUTPUT);
+
+  // Set VSYNC as output
+  pinMode(VSYNC, OUTPUT);
+
+  // start timer
+  GTCCR = 0;
 
   // Reset memory image copy code loop
   copy_loop_reset();
