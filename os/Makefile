@@ -5,7 +5,7 @@ MAKEBIN:=makebin
 
 ASFLAGS:=
 CFLAGS:=--std-c99
-LDFLAGS:=
+LDFLAGS:=--no-std-crt0 --data-loc 0x0
 
 SOURCES:=$(wildcard *.c) $(wildcard *.s)
 OBJECTS:=$(patsubst %.c,%.rel,$(SOURCES)) $(patsubst %.s,%.rel,$(SOURCES))

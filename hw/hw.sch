@@ -204,17 +204,6 @@ F 3 "" H 3500 2200 50  0001 C CNN
 	1    3500 2200
 	0    -1   -1   0   
 $EndComp
-$Comp
-L power:+5V #PWR0109
-U 1 1 5D29FF98
-P 3500 2300
-F 0 "#PWR0109" H 3500 2150 50  0001 C CNN
-F 1 "+5V" V 3515 2428 50  0000 L CNN
-F 2 "" H 3500 2300 50  0001 C CNN
-F 3 "" H 3500 2300 50  0001 C CNN
-	1    3500 2300
-	0    -1   -1   0   
-$EndComp
 Wire Wire Line
 	3500 2800 3600 2800
 $Comp
@@ -954,7 +943,7 @@ Text GLabel 9200 5800 0    50   Input ~ 0
 ~ARD
 Text GLabel 3500 2800 0    50   Input ~ 0
 ~WAIT
-Text GLabel 10100 5900 2    50   Output ~ 0
+Text GLabel 10600 5900 2    50   Output ~ 0
 ~WAIT
 Text GLabel 9200 5300 0    50   Input ~ 0
 ~IO_ACK
@@ -1431,4 +1420,83 @@ Text GLabel 2300 2400 2    50   Output ~ 0
 VSYNC
 Wire Wire Line
 	2300 2400 2200 2400
+Text GLabel 3500 600  0    50   Input ~ 0
+HSYNC
+Text GLabel 3700 600  2    50   Output ~ 0
+~INT
+Wire Wire Line
+	3500 600  3700 600 
+Text Notes 3950 600  0    50   ~ 0
+FIXME: this should be delayed as it triggers at the start of the back porch
+Text GLabel 10400 2650 0    50   Output ~ 0
+~INT
+$Comp
+L Device:R R?
+U 1 1 5D712536
+P 10650 2650
+F 0 "R?" V 10450 2650 50  0000 C CNN
+F 1 "4K7" V 10550 2650 50  0000 C CNN
+F 2 "" V 10580 2650 50  0001 C CNN
+F 3 "~" H 10650 2650 50  0001 C CNN
+	1    10650 2650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	10400 2650 10500 2650
+Wire Wire Line
+	10900 2650 10800 2650
+$Comp
+L power:+5V #PWR?
+U 1 1 5D71253F
+P 10900 2650
+F 0 "#PWR?" H 10900 2500 50  0001 C CNN
+F 1 "+5V" H 10915 2823 50  0000 C CNN
+F 2 "" H 10900 2650 50  0001 C CNN
+F 3 "" H 10900 2650 50  0001 C CNN
+	1    10900 2650
+	1    0    0    -1  
+$EndComp
+Text GLabel 3500 2300 0    50   Input ~ 0
+~INT
+Text GLabel 9500 2650 0    50   Output ~ 0
+~WAIT
+$Comp
+L Device:R R?
+U 1 1 5D722C7E
+P 9750 2650
+F 0 "R?" V 9550 2650 50  0000 C CNN
+F 1 "4K7" V 9650 2650 50  0000 C CNN
+F 2 "" V 9680 2650 50  0001 C CNN
+F 3 "~" H 9750 2650 50  0001 C CNN
+	1    9750 2650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9500 2650 9600 2650
+Wire Wire Line
+	10000 2650 9900 2650
+$Comp
+L power:+5V #PWR?
+U 1 1 5D722C86
+P 10000 2650
+F 0 "#PWR?" H 10000 2500 50  0001 C CNN
+F 1 "+5V" H 10015 2823 50  0000 C CNN
+F 2 "" H 10000 2650 50  0001 C CNN
+F 3 "" H 10000 2650 50  0001 C CNN
+	1    10000 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Diode:1N4148 D?
+U 1 1 5D732B67
+P 10250 5900
+F 0 "D?" H 10100 6000 50  0000 C CNN
+F 1 "1N4148" H 10350 6000 50  0000 C CNN
+F 2 "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal" H 10250 5725 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/1N4148_1N4448.pdf" H 10250 5900 50  0001 C CNN
+	1    10250 5900
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	10600 5900 10400 5900
 $EndSCHEMATC
