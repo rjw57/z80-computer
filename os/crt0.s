@@ -28,7 +28,7 @@
 
         .module crt0
        	.globl	_main
-        .globl	_isr
+        .globl	interrupt
 
 	.area	_HEADER (ABS)
 	;; Reset vector
@@ -48,7 +48,7 @@
 	.org	0x30
 	reti
 	.org	0x38
-    jp _isr
+    jp interrupt
 
 	.org	0x100
 init:

@@ -268,7 +268,7 @@ void setup() {
 
   // Depending on polarity of HSYNC, clock on rising or falling edge of T1 (aka
   // HSYNC).
-  if(h_polarity < 0) {
+  if(h_polarity > 0) {
     // Clock on falling edge of T1.
     TCCR1B |= _BV(CS12) | _BV(CS11);
   } else {
