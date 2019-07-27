@@ -14,7 +14,6 @@
 #define RST_BAR         A5
 #define CPU_RD_BAR      A4
 #define CPU_WR_BAR      A3
-#define CPU_A0          A2
 #define CLK_SEL         A0
 #define OV_CLK          A1
 
@@ -129,14 +128,21 @@ void release_read_dev() {
 
 // Set data bus value. Output depends on state of BUS_OE_BAR pin.
 void set_data(uint8_t data) {
+  // the code here is slightly awkward because we want to leave SR_CLK high
+  // after clocking in data so that writing to the arduino port works.
   digitalWrite(SR_MODE, LOW); // shifting data
-  shiftOut(SR_SER, SR_CLK, MSBFIRST, data);
+  digitalWrite(SR_CLK, LOW); // prepare to clock data
+  shiftOut(SR_SER, SR_CLK, MSBFIRST, data >> 1);
+  digitalWrite(SR_SER, (data & 0x1) ? HIGH : LOW);
+  digitalWrite(SR_CLK, HIGH);
+  digitalWrite(SR_MODE, HIGH); // loading data unless register is being read
 }
 
-// Read data bus value.
+// Read value in shift reg.
 uint8_t read_data() {
-  digitalWrite(SR_MODE, HIGH); // load
-  digitalWrite(SR_CLK, HIGH);
+  return 0x00;
+
+  digitalWrite(SR_MODE, LOW); // shifting data
 
   // At this point the SR_OUT pin *already* has the MSB of the data bus on it so
   // don't reset the clock pin. That way shiftIn reads data after the *falling*
@@ -144,8 +150,9 @@ uint8_t read_data() {
   digitalWrite(SR_MODE, LOW); // read
   uint8_t data = shiftIn(SR_OUT, SR_CLK, MSBFIRST);
 
-  // Now reset the clock pin
-  digitalWrite(SR_CLK, LOW);
+  // Now make sure the clock pin is high to ~WR takes effect
+  digitalWrite(SR_CLK, HIGH);
+  digitalWrite(SR_MODE, HIGH); // loading data
 
   return data;
 }
@@ -302,7 +309,6 @@ void setup() {
   // Setup CPU control lines
   pinMode(CPU_RD_BAR, INPUT);
   pinMode(CPU_WR_BAR, INPUT);
-  pinMode(CPU_A0, INPUT);
   pinMode(CPU_IOREQ_BAR, INPUT);
 
   // Setup clock override pins
@@ -313,10 +319,10 @@ void setup() {
   pinMode(SR_OUT, INPUT);
   digitalWrite(SR_SER, LOW);
   pinMode(SR_SER, OUTPUT);
-  digitalWrite(SR_CLK, LOW);
+  digitalWrite(SR_CLK, HIGH);
   pinMode(SR_CLK, OUTPUT);
   claim_read_dev();
-  digitalWrite(SR_MODE, LOW); // shifting data
+  digitalWrite(SR_MODE, HIGH); // loading data
   pinMode(SR_MODE, OUTPUT);
 
   // Ensure CPU is in RESET state.
@@ -341,12 +347,15 @@ void setup() {
 
   reset_on();
   release_read_dev();
+
   release_clock();
 
   // Connect IOREQ handler
   attachInterrupt(0, io_request_handler, FALLING);
 
-  // wnsure we're not in a wait state
+  set_data(0xff);
+
+  // ensure we're not in a wait state
   digitalWrite(IO_ACK_BAR, LOW);
   digitalWrite(IO_ACK_BAR, HIGH);
 
@@ -354,7 +363,7 @@ void setup() {
 }
 
 void loop() {
-  if(should_handle_io_request) { io_request_handler_bottom(); }
+  //if(should_handle_io_request) { io_request_handler_bottom(); }
 }
 
 // vim:sw=2:sts=2:et
