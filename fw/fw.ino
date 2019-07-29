@@ -9,11 +9,11 @@
 #define SR_MODE         7
 #define SR_OUT          6
 
-#define CPU_IOREQ_BAR   2
+#define ARD_OVR_BAR     2
+#define ARD_OVR         3
 
 #define RST_BAR         A5
 #define CPU_RD_BAR      A4
-#define CPU_WR_BAR      A3
 #define CLK_SEL         A0
 #define OV_CLK          A1
 
@@ -115,15 +115,13 @@ void copy_loop_advance() {
 }
 
 void claim_read_dev() {
-  // the CPU IO_REQ pin is protected by a diode and a pull-up so we can override
-  // it safely. We do so here so that the data bus is always driven by the
-  // Arduino when reading.
-  digitalWrite(CPU_IOREQ_BAR, LOW);
-  pinMode(CPU_IOREQ_BAR, OUTPUT);
+  digitalWrite(ARD_OVR_BAR, LOW);
+  digitalWrite(ARD_OVR, HIGH);
 }
 
 void release_read_dev() {
-  pinMode(CPU_IOREQ_BAR, INPUT);
+  digitalWrite(ARD_OVR_BAR, HIGH);
+  digitalWrite(ARD_OVR, LOW);
 }
 
 // Set data bus value. Output depends on state of BUS_OE_BAR pin.
@@ -208,25 +206,9 @@ void io_request_handler() {
 }
 
 void io_request_handler_bottom() {
-  static uint8_t io_ctr = 0;
-
-  should_handle_io_request = false;
-
-  if(digitalRead(CPU_RD_BAR) == LOW) {
-    set_data(io_ctr++);
-  } else if(digitalRead(CPU_WR_BAR) == LOW) {
-    Serial.println(read_data(), HEX);
-  }
-
-  // Resume CPU
-  digitalWrite(IO_ACK_BAR, LOW);
-  digitalWrite(IO_ACK_BAR, HIGH);
 }
 
-void setup() {
-  Serial.begin(9600);
-  while (!Serial);  // wait for serial port to connect. Needed for native USB
-
+void setup_timers() {
   // Reset all timers and halt them
   GTCCR = _BV(TSM) | _BV(PSRASY) | _BV(PSRSYNC);
 
@@ -294,22 +276,27 @@ void setup() {
   TCNT0 = 0;
   TCNT1 = 0;
 
+  // start timer
+  GTCCR = 0;
+}
+
+void setup() {
+  //Serial.begin(9600);
+  //while (!Serial);  // wait for serial port to connect. Needed for native USB
+
   // Set HSYNC as output
   pinMode(HSYNC, OUTPUT);
 
   // Set VSYNC as output
   pinMode(VSYNC, OUTPUT);
 
-  // start timer
-  GTCCR = 0;
+  setup_timers();
 
   // Reset memory image copy code loop
   copy_loop_reset();
 
   // Setup CPU control lines
   pinMode(CPU_RD_BAR, INPUT);
-  pinMode(CPU_WR_BAR, INPUT);
-  pinMode(CPU_IOREQ_BAR, INPUT);
 
   // Setup clock override pins
   pinMode(OV_CLK, OUTPUT);
@@ -321,6 +308,8 @@ void setup() {
   pinMode(SR_SER, OUTPUT);
   digitalWrite(SR_CLK, HIGH);
   pinMode(SR_CLK, OUTPUT);
+  pinMode(ARD_OVR_BAR, OUTPUT);
+  pinMode(ARD_OVR, OUTPUT);
   claim_read_dev();
   digitalWrite(SR_MODE, HIGH); // loading data
   pinMode(SR_MODE, OUTPUT);
@@ -350,10 +339,10 @@ void setup() {
 
   release_clock();
 
+  set_data(0xaa);
+
   // Connect IOREQ handler
   attachInterrupt(0, io_request_handler, FALLING);
-
-  set_data(0xff);
 
   // ensure we're not in a wait state
   digitalWrite(IO_ACK_BAR, LOW);
