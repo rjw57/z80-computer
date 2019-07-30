@@ -175,7 +175,6 @@ Connection ~ 10400 9000
 Wire Wire Line
 	10400 9000 10400 9100
 NoConn ~ 11450 9300
-NoConn ~ 11450 9000
 NoConn ~ 11450 8900
 Text GLabel 11550 8800 2    50   Output ~ 0
 CLK_CPU
@@ -942,10 +941,10 @@ Wire Wire Line
 	2000 5400 2100 5400
 Text GLabel 3800 5600 2    50   Output ~ 0
 ~ARD_RD
-Text GLabel 11550 9100 2    50   Output ~ 0
+Text GLabel 11550 9000 2    50   Output ~ 0
 CLK_CHAR
 Wire Wire Line
-	11550 9100 11450 9100
+	11550 9000 11450 9000
 Text GLabel 2400 9600 2    50   Input ~ 0
 CLK_CHAR
 Wire Wire Line
@@ -959,7 +958,7 @@ VSYNC
 Wire Wire Line
 	2400 10200 2300 10200
 Text GLabel 12700 800  0    50   Input ~ 0
-HSYNC
+VSYNC
 Text GLabel 12900 800  2    50   Output ~ 0
 ~INT
 Wire Wire Line
@@ -1112,30 +1111,15 @@ F 3 "74xx/74hc_hct74.pdf" H 12900 4000 50  0001 C CNN
 	1    12900 4000
 	1    0    0    -1  
 $EndComp
-Text GLabel 12400 4100 0    50   Input ~ 0
-~INTACK
 Wire Wire Line
 	12900 3600 12900 3700
-$Comp
-L power:GND #PWR037
-U 1 1 5D42E4CC
-P 12500 3900
-F 0 "#PWR037" H 12500 3650 50  0001 C CNN
-F 1 "GND" H 12505 3727 50  0000 C CNN
-F 2 "" H 12500 3900 50  0001 C CNN
-F 3 "" H 12500 3900 50  0001 C CNN
-	1    12500 3900
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	12600 3900 12500 3900
-Text GLabel 12400 3600 0    50   Input ~ 0
-HSYNC
 Wire Wire Line
-	12400 3600 12900 3600
+	12500 4400 12900 4400
 Wire Wire Line
-	13200 3900 13400 3900
-Text GLabel 13400 3900 2    50   Output ~ 0
+	13200 4100 13400 4100
+Text GLabel 13400 4100 2    50   Output ~ 0
 ~WAIT
 $Comp
 L 74xx:74LS74 U10
@@ -1194,27 +1178,9 @@ $EndComp
 Wire Wire Line
 	12500 3000 12900 3000
 Wire Wire Line
-	12400 4100 12500 4100
-Wire Wire Line
-	12500 4100 12500 4000
-Wire Wire Line
 	12500 4000 12600 4000
-$Comp
-L power:+5V #PWR038
-U 1 1 5D597F98
-P 12500 4400
-F 0 "#PWR038" H 12500 4250 50  0001 C CNN
-F 1 "+5V" H 12515 4573 50  0000 C CNN
-F 2 "" H 12500 4400 50  0001 C CNN
-F 3 "" H 12500 4400 50  0001 C CNN
-	1    12500 4400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12500 4400 12900 4400
 Wire Wire Line
 	12900 4400 12900 4300
-NoConn ~ 13200 4100
 Text GLabel 4900 3050 0    50   Input ~ 0
 ~RAM_REQ
 Text GLabel 3600 8000 0    50   Input ~ 0
@@ -1475,21 +1441,6 @@ Wire Wire Line
 Wire Wire Line
 	10100 5000 9900 5000
 NoConn ~ 2300 10100
-Text GLabel 3550 10800 0    50   Input ~ 0
-VSYNC
-Wire Wire Line
-	3550 10800 3650 10800
-$Comp
-L Connector:Conn_01x01_Female J1
-U 1 1 5E830B1F
-P 3850 10800
-F 0 "J1" H 3877 10826 50  0000 L CNN
-F 1 "Conn_01x01_Female" H 3877 10735 50  0000 L CNN
-F 2 "" H 3850 10800 50  0001 C CNN
-F 3 "~" H 3850 10800 50  0001 C CNN
-	1    3850 10800
-	1    0    0    -1  
-$EndComp
 $Comp
 L 74xx:74LS245 U9
 U 1 1 5E8936D2
@@ -1714,10 +1665,10 @@ Text GLabel 1200 7200 0    50   Input ~ 0
 ARD_OVR
 Wire Wire Line
 	1200 7200 1600 7200
-Text GLabel 2400 9500 2    50   Output ~ 0
+Text GLabel 6400 7300 2    50   Output ~ 0
 ARD_OVR
 Wire Wire Line
-	2400 9500 2300 9500
+	6400 7300 6300 7300
 Wire Wire Line
 	5600 9100 5700 9100
 Wire Wire Line
@@ -1830,4 +1781,156 @@ NoConn ~ 9500 5800
 NoConn ~ 9500 5900
 NoConn ~ 9900 5800
 NoConn ~ 9900 5900
+$Comp
+L 74xx:74LS04 U?
+U 6 1 5F320C52
+P 6000 7300
+F 0 "U?" H 6000 7617 50  0000 C CNN
+F 1 "74LS04" H 6000 7526 50  0000 C CNN
+F 2 "" H 6000 7300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS04" H 6000 7300 50  0001 C CNN
+	6    6000 7300
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS04 U?
+U 7 1 5F320D2F
+P 13000 8900
+F 0 "U?" H 13230 8946 50  0000 L CNN
+F 1 "74LS04" H 13230 8855 50  0000 L CNN
+F 2 "" H 13000 8900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS04" H 13000 8900 50  0001 C CNN
+	7    13000 8900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5F320E22
+P 13000 8300
+F 0 "#PWR?" H 13000 8150 50  0001 C CNN
+F 1 "+5V" H 13015 8473 50  0000 C CNN
+F 2 "" H 13000 8300 50  0001 C CNN
+F 3 "" H 13000 8300 50  0001 C CNN
+	1    13000 8300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13000 8300 13000 8400
+$Comp
+L power:GND #PWR?
+U 1 1 5F33C45D
+P 13000 9500
+F 0 "#PWR?" H 13000 9250 50  0001 C CNN
+F 1 "GND" H 13005 9327 50  0000 C CNN
+F 2 "" H 13000 9500 50  0001 C CNN
+F 3 "" H 13000 9500 50  0001 C CNN
+	1    13000 9500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13000 9400 13000 9500
+Text GLabel 5600 7300 0    50   Input ~ 0
+~ARD_OVR
+Wire Wire Line
+	5600 7300 5700 7300
+NoConn ~ 2300 9500
+Text GLabel 6400 7900 2    50   Output ~ 0
+INTACK
+Wire Wire Line
+	6400 7900 6300 7900
+$Comp
+L 74xx:74LS04 U?
+U 1 1 5F3C62F6
+P 6000 7900
+F 0 "U?" H 6000 8217 50  0000 C CNN
+F 1 "74LS04" H 6000 8126 50  0000 C CNN
+F 2 "" H 6000 7900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS04" H 6000 7900 50  0001 C CNN
+	1    6000 7900
+	1    0    0    -1  
+$EndComp
+Text GLabel 5600 7900 0    50   Input ~ 0
+~INTACK
+Wire Wire Line
+	5600 7900 5700 7900
+$Comp
+L power:+5V #PWR?
+U 1 1 5F4A653E
+P 12900 3600
+F 0 "#PWR?" H 12900 3450 50  0001 C CNN
+F 1 "+5V" H 12915 3773 50  0000 C CNN
+F 2 "" H 12900 3600 50  0001 C CNN
+F 3 "" H 12900 3600 50  0001 C CNN
+	1    12900 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5F4C2BE8
+P 12500 3900
+F 0 "#PWR?" H 12500 3750 50  0001 C CNN
+F 1 "+5V" H 12515 4073 50  0000 C CNN
+F 2 "" H 12500 3900 50  0001 C CNN
+F 3 "" H 12500 3900 50  0001 C CNN
+	1    12500 3900
+	1    0    0    -1  
+$EndComp
+Text GLabel 12500 4400 0    50   Input ~ 0
+HSYNC
+Text GLabel 12500 4000 0    50   Input ~ 0
+INTACK
+NoConn ~ 13200 3900
+NoConn ~ 11450 9100
+$Comp
+L 74xx:74LS273 U?
+U 1 1 5F62F988
+P 6300 5300
+F 0 "U?" H 6050 5950 50  0000 C CNN
+F 1 "74LS273" H 6500 5950 50  0000 C CNN
+F 2 "" H 6300 5300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS273" H 6300 5300 50  0001 C CNN
+	1    6300 5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5F62FB90
+P 6300 4400
+F 0 "#PWR?" H 6300 4250 50  0001 C CNN
+F 1 "+5V" H 6315 4573 50  0000 C CNN
+F 2 "" H 6300 4400 50  0001 C CNN
+F 3 "" H 6300 4400 50  0001 C CNN
+	1    6300 4400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6300 4400 6300 4500
+$Comp
+L power:GND #PWR?
+U 1 1 5F64B56F
+P 6300 6200
+F 0 "#PWR?" H 6300 5950 50  0001 C CNN
+F 1 "GND" H 6305 6027 50  0000 C CNN
+F 2 "" H 6300 6200 50  0001 C CNN
+F 3 "" H 6300 6200 50  0001 C CNN
+	1    6300 6200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6300 6100 6300 6200
+$Comp
+L power:+5V #PWR?
+U 1 1 5F66703B
+P 5700 5800
+F 0 "#PWR?" H 5700 5650 50  0001 C CNN
+F 1 "+5V" H 5715 5973 50  0000 C CNN
+F 2 "" H 5700 5800 50  0001 C CNN
+F 3 "" H 5700 5800 50  0001 C CNN
+	1    5700 5800
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5700 5800 5800 5800
+Text Notes 700  8250 0    50   ~ 0
+FIXME: or refresh!
 $EndSCHEMATC

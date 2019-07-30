@@ -10,7 +10,7 @@ void main(void) {
   for(;;++i) {
     //arduino_port = port_a;
     arduino_port = i;
-    port_a = arduino_port;
+    //port_a = arduino_port;
     //port_a = i;
     j=0; do { ++j; } while(j!=0x5000);
   }

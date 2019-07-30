@@ -2,6 +2,7 @@
 
 #define HSYNC           5 // =OC0B, fixed by hardware
 #define VSYNC           10 // =OC1B, fixed by hardware
+#define CHAR_CLK        4 // =T0, fixed by hardware
 
 #define SR_SER          11
 #define IO_ACK_BAR      9
@@ -54,7 +55,7 @@ const uint16_t whole_frame             =
     v_visible_area + v_front_porch + v_sync_width + v_back_porch;
 
 // Counter timer
-const double timer_freq           = dot_clock_freq / 16;   // MHz
+const double timer_freq           = dot_clock_freq / 8;   // MHz
 
 // Prepare for LDIR instruction for writing to memory. Resets BC and DE to zero
 // so that LDIR writes to RAM starting from address $0000. We feed the LDIR
