@@ -165,6 +165,7 @@ void claim_clock() {
 // Release CPU clock. Clock is now crystal.
 void release_clock() {
   digitalWrite(CLK_SEL, HIGH);
+  digitalWrite(OV_CLK, HIGH);
 }
 
 void tick_update() {
