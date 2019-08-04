@@ -4,6 +4,9 @@ static __sfr __at 0x1 port_a;
 void main(void) {
   unsigned char i;
   unsigned int j, k;
+
+  port_a = 0;
+
   __asm__("im 1"); // mode 1 interrupts, jump to 0x0038
   __asm__("ei");
 
@@ -11,7 +14,7 @@ void main(void) {
   while(1) {
     unsigned char n=1<<(i&0x7);
     for(k=0; k<255; ++k) {
-      ((unsigned char*)0x4000)[k] = n;
+      ((unsigned char*)0x4000)[k] = 0xaa;
       //j=0; do { ++j; } while(j!=0x5000);
     }
     ++i;
