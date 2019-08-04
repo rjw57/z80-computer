@@ -16,7 +16,7 @@ interrupt::
     push    hl
     push    iy
 
-    ld de, #0x202 ; This needs calibrating
+    ld de, #0x200 ; This needs calibrating
 interrupt_wait:
     dec de
     ld a, d
@@ -24,6 +24,14 @@ interrupt_wait:
     jp nz, interrupt_wait
 
     nop
+    nop
+    nop
+    nop
+    nop
+    ld a, #0x40
+    ld i, a
+    ld a, #0x0
+    ld r, a
 
     ; Initialise line loop count 480
     ld de, #480
@@ -147,9 +155,6 @@ interrupt_line_loop:
     ld a, d
     or e
     jp nz, interrupt_line_loop
-
-    ld a, #0
-    ld i, a
 
     ; Epilogue
     pop iy
