@@ -15,6 +15,7 @@
 
 #define RST_BAR         A5
 #define CPU_RD_BAR      A4
+#define CPU_INT_BAR     A3
 #define CLK_SEL         A0
 #define OV_CLK          A1
 
@@ -210,6 +211,20 @@ void io_request_handler() {
 void io_request_handler_bottom() {
 }
 
+// Called around the middle of the HSYNC pulse which will be after TCNT1 update.
+// Use the value of TCNT1 (the row counter) to determine when to trigger a
+// vertical interrupt.
+ISR(TIMER0_OVF_vect) {
+  // Our video driver takes two lines to respond to the interrupt and enable the
+  // display.
+  if(TCNT1 == v_sync_width + v_back_porch - 2 + 60) {
+    // The AVR is more than slow enough to make sure that the Z80 notices this
+    // interrupt.
+    digitalWrite(CPU_INT_BAR, LOW);
+    digitalWrite(CPU_INT_BAR, HIGH);
+  }
+}
+
 void setup_timers() {
   // Reset all timers and halt them
   GTCCR = _BV(TSM) | _BV(PSRASY) | _BV(PSRSYNC);
@@ -274,6 +289,9 @@ void setup_timers() {
   // OCR1B is set to the pulse width minus 1 since it is zero based.
   OCR1B = v_sync_width - 1;
 
+  // Enable OVF interrupt for timer 0
+  TIMSK0 |= _BV(TOIE0);
+
   // Set initial timer values
   TCNT0 = 0;
   TCNT1 = 0;
@@ -299,6 +317,8 @@ void setup() {
 
   // Setup CPU control lines
   pinMode(CPU_RD_BAR, INPUT);
+  digitalWrite(CPU_INT_BAR, HIGH);
+  pinMode(CPU_INT_BAR, OUTPUT);
 
   // Setup clock override pins
   pinMode(OV_CLK, OUTPUT);
@@ -355,6 +375,22 @@ void setup() {
 
 void loop() {
   //if(should_handle_io_request) { io_request_handler_bottom(); }
+}
+
+// HACK: by rolling our own main() function we avoid linking in the wiring
+// support library which, in turn, frees up timer 0's interrupt for our use.
+int main(void) {
+  // disable interrupts while performing setup
+  noInterrupts();
+
+  // setup pins, timers, etc.
+  setup();
+
+  // re-enable interrupts
+  interrupts();
+
+  while(1) { loop(); }
+  return 0;
 }
 
 // vim:sw=2:sts=2:et

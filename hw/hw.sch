@@ -932,14 +932,6 @@ Text GLabel 2400 10200 2    50   Output ~ 0
 VSYNC
 Wire Wire Line
 	2400 10200 2300 10200
-Text GLabel 12700 800  0    50   Input ~ 0
-VSYNC
-Text GLabel 12900 800  2    50   Output ~ 0
-~INT
-Wire Wire Line
-	12700 800  12900 800 
-Text Notes 13150 800  0    50   ~ 0
-FIXME: this should be delayed as it triggers at the start of the back porch
 Text GLabel 10400 2650 0    50   Output ~ 0
 ~INT
 $Comp
@@ -1542,7 +1534,6 @@ F 3 "" H 2000 5900 50  0001 C CNN
 	1    2000 5900
 	1    0    0    -1  
 $EndComp
-NoConn ~ 1300 10100
 Wire Wire Line
 	4700 9600 5600 9600
 Wire Wire Line
@@ -2069,9 +2060,6 @@ Wire Wire Line
 Wire Wire Line
 	9700 8100 9800 8100
 Connection ~ 9800 8100
-NoConn ~ 11400 9300
-Text GLabel 7600 3200 0    50   Input ~ 0
-CLK_CHAR
 Wire Wire Line
 	7000 5700 7200 5700
 Text GLabel 12600 6100 2    50   Output ~ 0
@@ -2241,4 +2229,18 @@ Wire Wire Line
 Connection ~ 8300 4900
 Wire Wire Line
 	8300 4900 8300 5100
+Text GLabel 1000 10100 0    50   Output ~ 0
+~INT
+Wire Wire Line
+	1300 10100 1000 10100
+Text GLabel 11600 9600 2    50   Output ~ 0
+CHAR_TC
+Wire Wire Line
+	11400 9300 11500 9300
+Wire Wire Line
+	11500 9300 11500 9600
+Wire Wire Line
+	11500 9600 11600 9600
+Text GLabel 7600 3200 0    50   Input ~ 0
+CHAR_TC
 $EndSCHEMATC
