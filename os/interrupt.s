@@ -4,7 +4,7 @@
     .globl interrupt
 
 ; Output port
-port_a = 0x0001
+port_a = 0x81
 
     .area _CODE
 

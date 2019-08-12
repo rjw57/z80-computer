@@ -109,11 +109,7 @@ Wire Wire Line
 Wire Wire Line
 	10900 8400 10900 8500
 Wire Wire Line
-	10350 9400 10350 9500
-Wire Wire Line
 	10350 9500 10400 9500
-Wire Wire Line
-	10350 9400 10400 9400
 $Comp
 L power:+5V #PWR025
 U 1 1 5D29DC0C
@@ -298,110 +294,12 @@ Wire Wire Line
 	3400 3700 3300 3700
 Wire Wire Line
 	3300 3800 3400 3800
-$Comp
-L MCU_Module:Arduino_Nano_v3.x A1
-U 1 1 5D2ADAF0
-P 1800 9800
-F 0 "A1" H 1450 10750 50  0000 C CNN
-F 1 "Arduino_Nano_v3.x" H 2400 10750 50  0000 C CNN
-F 2 "Module:Arduino_Nano" H 1950 8850 50  0001 L CNN
-F 3 "http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf" H 1800 8800 50  0001 C CNN
-	1    1800 9800
-	-1   0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR04
-U 1 1 5D2ADB58
-P 1800 10900
-F 0 "#PWR04" H 1800 10650 50  0001 C CNN
-F 1 "GND" H 1805 10727 50  0000 C CNN
-F 2 "" H 1800 10900 50  0001 C CNN
-F 3 "" H 1800 10900 50  0001 C CNN
-	1    1800 10900
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	1800 10800 1800 10850
-Wire Wire Line
-	1800 10850 1700 10850
-Wire Wire Line
-	1700 10850 1700 10800
-Connection ~ 1800 10850
-Wire Wire Line
-	1800 10850 1800 10900
-$Comp
-L Diode:1N4148 D1
-U 1 1 5D2AF86D
-P 1450 8700
-F 0 "D1" H 1450 8916 50  0000 C CNN
-F 1 "1N4148" H 1450 8825 50  0000 C CNN
-F 2 "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal" H 1450 8525 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/1N4148_1N4448.pdf" H 1450 8700 50  0001 C CNN
-	1    1450 8700
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	1600 8700 1600 8800
-NoConn ~ 1700 8800
-NoConn ~ 1900 8800
-$Comp
-L power:+5V #PWR01
-U 1 1 5D2B25DD
-P 1200 8600
-F 0 "#PWR01" H 1200 8450 50  0001 C CNN
-F 1 "+5V" H 1215 8773 50  0000 C CNN
-F 2 "" H 1200 8600 50  0001 C CNN
-F 3 "" H 1200 8600 50  0001 C CNN
-	1    1200 8600
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	1200 8600 1200 8700
-NoConn ~ 1300 9200
-NoConn ~ 1300 9300
-NoConn ~ 1300 9600
-Text GLabel 1200 9800 0    50   Output ~ 0
-CLK_SEL
-Text GLabel 1200 9900 0    50   Output ~ 0
-CLK_OVR
-Wire Wire Line
-	1300 9800 1200 9800
-Wire Wire Line
-	1200 9900 1300 9900
 Text GLabel 1800 3100 0    50   Output ~ 0
 ~RD
 Wire Wire Line
 	1800 3100 1900 3100
-Text GLabel 1200 10200 0    50   Input ~ 0
-~RD
-Text GLabel 1000 10300 0    50   Output ~ 0
-~RST
-Wire Wire Line
-	1000 10300 1300 10300
-Wire Wire Line
-	1200 10200 1300 10200
-NoConn ~ 1300 10400
-NoConn ~ 1300 10500
 Text GLabel 2700 7300 2    50   Output ~ 0
 ~RAM_OE
-Text GLabel 2400 10300 2    50   Output ~ 0
-SR_SER
-Text GLabel 2400 9900 2    50   Output ~ 0
-SR_MODE
-Text GLabel 2400 10000 2    50   Output ~ 0
-SR_CLK
-Wire Wire Line
-	2400 9900 2300 9900
-Wire Wire Line
-	2300 10000 2400 10000
-Wire Wire Line
-	2300 10300 2400 10300
-NoConn ~ 2300 10400
-NoConn ~ 2300 10500
-NoConn ~ 2300 9200
-NoConn ~ 2300 9300
-Wire Wire Line
-	1200 8700 1300 8700
 $Comp
 L Memory_RAM:CY7C199 U5
 U 1 1 5D37B8A5
@@ -723,10 +621,6 @@ F 3 "" H 5600 10100 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	5600 10100 5700 10100
-Text GLabel 2400 9800 2    50   Input ~ 0
-SR_OUT
-Wire Wire Line
-	2300 9800 2400 9800
 Text GLabel 1800 3450 0    50   Output ~ 0
 ~IO_REQ
 Wire Wire Line
@@ -737,10 +631,6 @@ Wire Wire Line
 	1850 3450 1800 3450
 Text GLabel 1800 2650 0    50   Input ~ 0
 ~WAIT
-Text GLabel 2400 9400 2    50   Output ~ 0
-~ARD_OVR
-Wire Wire Line
-	2400 9400 2300 9400
 Text GLabel 10400 3000 0    50   Output ~ 0
 ~RST
 $Comp
@@ -887,17 +777,6 @@ Text GLabel 3800 5750 2    50   Output ~ 0
 ~PORTA_RD
 Wire Wire Line
 	2000 5900 2100 5900
-$Comp
-L power:+5V #PWR05
-U 1 1 5D3FC9FC
-P 2000 5700
-F 0 "#PWR05" H 2000 5550 50  0001 C CNN
-F 1 "+5V" H 2015 5873 50  0000 C CNN
-F 2 "" H 2000 5700 50  0001 C CNN
-F 3 "" H 2000 5700 50  0001 C CNN
-	1    2000 5700
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2000 5700 2100 5700
 Wire Wire Line
@@ -920,18 +799,6 @@ Text GLabel 11500 9000 2    50   Output ~ 0
 CLK_CHAR
 Wire Wire Line
 	11500 9000 11400 9000
-Text GLabel 2400 9600 2    50   Input ~ 0
-CLK_CHAR
-Wire Wire Line
-	2300 9600 2400 9600
-Text GLabel 2400 9700 2    50   Output ~ 0
-HSYNC_RAW
-Wire Wire Line
-	2300 9700 2400 9700
-Text GLabel 2400 10200 2    50   Output ~ 0
-VSYNC
-Wire Wire Line
-	2400 10200 2300 10200
 Text GLabel 10400 2650 0    50   Output ~ 0
 ~INT
 $Comp
@@ -1104,22 +971,9 @@ Wire Wire Line
 Wire Wire Line
 	12900 3000 12900 2900
 Wire Wire Line
-	13200 2500 13400 2500
-Text GLabel 13400 2500 2    50   Output ~ 0
-HSYNC
-Text GLabel 12400 2500 0    50   Input ~ 0
-HSYNC_RAW
-NoConn ~ 13200 2700
-Wire Wire Line
 	12400 2500 12600 2500
-Text GLabel 12400 2700 0    50   Input ~ 0
-CLK_CHAR
-Wire Wire Line
-	12400 2700 12500 2700
-Wire Wire Line
-	12500 2700 12500 2600
-Wire Wire Line
-	12500 2600 12600 2600
+Text GLabel 12400 2600 0    50   Input ~ 0
+CLK_DOT
 $Comp
 L power:+5V #PWR039
 U 1 1 5D52DBFD
@@ -1210,7 +1064,6 @@ F 3 "" H 14600 9500 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	14600 9400 14600 9500
-NoConn ~ 1300 10000
 Text GLabel 3600 7800 0    50   Input ~ 0
 ~MEM_REQ
 $Comp
@@ -1338,7 +1191,6 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 5100 9300 50  0001 C CNN
 	1    5100 9300
 	1    0    0    -1  
 $EndComp
-NoConn ~ 2300 10100
 $Comp
 L 74xx:74LS245 U9
 U 1 1 5E8936D2
@@ -1523,17 +1375,6 @@ Wire Wire Line
 	3300 5700 3100 5700
 NoConn ~ 3100 5800
 NoConn ~ 3100 5900
-$Comp
-L power:GND #PWR06
-U 1 1 5EDC8457
-P 2000 5900
-F 0 "#PWR06" H 2000 5650 50  0001 C CNN
-F 1 "GND" H 2005 5727 50  0000 C CNN
-F 2 "" H 2000 5900 50  0001 C CNN
-F 3 "" H 2000 5900 50  0001 C CNN
-	1    2000 5900
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4700 9600 5600 9600
 Wire Wire Line
@@ -1726,7 +1567,6 @@ Text GLabel 5600 7300 0    50   Input ~ 0
 ~ARD_OVR
 Wire Wire Line
 	5600 7300 5700 7300
-NoConn ~ 2300 9500
 Text GLabel 6400 7900 2    50   Output ~ 0
 INTACK
 Wire Wire Line
@@ -1985,9 +1825,6 @@ Wire Wire Line
 	10350 9200 10350 9300
 Wire Wire Line
 	10350 9300 10400 9300
-Connection ~ 10350 9400
-Wire Wire Line
-	10300 9400 10350 9400
 $Comp
 L power:+5V #PWR024
 U 1 1 5D29D9EF
@@ -2078,7 +1915,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8100 3300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 7600 3400 0    50   Input ~ 0
-DPY_ENABLE
+VIS
 Wire Wire Line
 	7600 3200 7800 3200
 Wire Wire Line
@@ -2229,10 +2066,6 @@ Wire Wire Line
 Connection ~ 8300 4900
 Wire Wire Line
 	8300 4900 8300 5100
-Text GLabel 1000 10100 0    50   Output ~ 0
-~INT
-Wire Wire Line
-	1300 10100 1000 10100
 Text GLabel 11600 9600 2    50   Output ~ 0
 CHAR_TC
 Wire Wire Line
@@ -2243,4 +2076,434 @@ Wire Wire Line
 	11500 9600 11600 9600
 Text GLabel 7600 3200 0    50   Input ~ 0
 CHAR_TC
+$Comp
+L MCU_Microchip_ATmega:ATmega328P-PU U?
+U 1 1 5D503270
+P -1400 9100
+F 0 "U?" H -2041 9146 50  0000 R CNN
+F 1 "ATmega328P-PU" H -2041 9055 50  0000 R CNN
+F 2 "Package_DIP:DIP-28_W7.62mm" H -1400 9100 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/ATmega328_P%20AVR%20MCU%20with%20picoPower%20Technology%20Data%20Sheet%2040001984A.pdf" H -1400 9100 50  0001 C CNN
+	1    -1400 9100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D5034CD
+P -1400 10700
+F 0 "#PWR?" H -1400 10450 50  0001 C CNN
+F 1 "GND" H -1395 10527 50  0000 C CNN
+F 2 "" H -1400 10700 50  0001 C CNN
+F 3 "" H -1400 10700 50  0001 C CNN
+	1    -1400 10700
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-1400 10600 -1400 10700
+$Comp
+L power:+5V #PWR?
+U 1 1 5D5294D7
+P -1350 7500
+F 0 "#PWR?" H -1350 7350 50  0001 C CNN
+F 1 "+5V" H -1335 7673 50  0000 C CNN
+F 2 "" H -1350 7500 50  0001 C CNN
+F 3 "" H -1350 7500 50  0001 C CNN
+	1    -1350 7500
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-1350 7500 -1350 7550
+Wire Wire Line
+	-1350 7550 -1400 7550
+Wire Wire Line
+	-1400 7550 -1400 7600
+Wire Wire Line
+	-1350 7550 -1300 7550
+Wire Wire Line
+	-1300 7550 -1300 7600
+Connection ~ -1350 7550
+$Comp
+L power:+5V #PWR?
+U 1 1 5D5774D8
+P -2100 7900
+F 0 "#PWR?" H -2100 7750 50  0001 C CNN
+F 1 "+5V" H -2085 8073 50  0000 C CNN
+F 2 "" H -2100 7900 50  0001 C CNN
+F 3 "" H -2100 7900 50  0001 C CNN
+	1    -2100 7900
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-2100 7900 -2000 7900
+$Comp
+L Connector_Generic:Conn_02x03_Odd_Even J?
+U 1 1 5D59EE5D
+P -3450 8200
+F 0 "J?" H -3400 8517 50  0000 C CNN
+F 1 "Conn_02x03_Odd_Even" H -3400 8426 50  0000 C CNN
+F 2 "" H -3450 8200 50  0001 C CNN
+F 3 "~" H -3450 8200 50  0001 C CNN
+	1    -3450 8200
+	1    0    0    -1  
+$EndComp
+NoConn ~ -3150 8100
+$Comp
+L power:GND #PWR?
+U 1 1 5D5C6807
+P -3050 8300
+F 0 "#PWR?" H -3050 8050 50  0001 C CNN
+F 1 "GND" H -3045 8127 50  0000 C CNN
+F 2 "" H -3050 8300 50  0001 C CNN
+F 3 "" H -3050 8300 50  0001 C CNN
+	1    -3050 8300
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-3150 8300 -3050 8300
+Text GLabel -3750 8100 0    50   Input ~ 0
+ISP_MISO
+Wire Wire Line
+	-3750 8100 -3650 8100
+Text GLabel -700 8300 2    50   Output ~ 0
+ISP_MISO
+Wire Wire Line
+	-700 8300 -800 8300
+Text GLabel -3050 8200 2    50   Input ~ 0
+ISP_MOSI
+Wire Wire Line
+	-3050 8200 -3150 8200
+Text GLabel -700 8200 2    50   Input ~ 0
+ISP_MOSI
+Wire Wire Line
+	-700 8200 -800 8200
+Text GLabel -3750 8200 0    50   Input ~ 0
+ISP_SCLK
+Text GLabel -3750 8300 0    50   Input ~ 0
+ISP_RESET
+Text GLabel -700 9400 2    50   Input ~ 0
+ISP_RESET
+Wire Wire Line
+	-700 9400 -800 9400
+Wire Wire Line
+	-3750 8200 -3650 8200
+Wire Wire Line
+	-3650 8300 -3750 8300
+Text GLabel -700 8400 2    50   Output ~ 0
+ISP_SCLK
+Wire Wire Line
+	-700 8400 -800 8400
+Text GLabel -700 10100 2    50   Output ~ 0
+HSYNC_RAW
+Wire Wire Line
+	-700 10100 -800 10100
+Text Notes 13800 1700 0    50   ~ 0
+FIXME: delete this\n
+Text GLabel -700 8100 2    50   Output ~ 0
+VSYNC
+Wire Wire Line
+	-700 8100 -800 8100
+Text GLabel -700 9900 2    50   Output ~ 0
+VIS_RAW
+Wire Wire Line
+	-700 9900 -800 9900
+Text GLabel -700 8500 2    50   Input ~ 0
+CLK_AVR
+Wire Wire Line
+	-700 8500 -800 8500
+NoConn ~ -800 8600
+Text GLabel -700 7900 2    50   Output ~ 0
+~INT
+Wire Wire Line
+	-700 7900 -800 7900
+Text GLabel -700 10300 2    50   Input ~ 0
+~RD
+Wire Wire Line
+	-700 10300 -800 10300
+Text GLabel -700 8900 2    50   Output ~ 0
+SR_MODE
+Text GLabel -700 8800 2    50   Output ~ 0
+SR_CLK
+Wire Wire Line
+	-700 8900 -800 8900
+Wire Wire Line
+	-800 8800 -700 8800
+Text GLabel -700 9100 2    50   Input ~ 0
+SR_OUT
+Wire Wire Line
+	-800 9100 -700 9100
+Text GLabel -700 9000 2    50   Output ~ 0
+SR_SER
+Wire Wire Line
+	-800 9000 -700 9000
+Text GLabel -700 9200 2    50   Output ~ 0
+CLK_SEL
+Text GLabel -700 9300 2    50   Output ~ 0
+CLK_OVR
+Wire Wire Line
+	-800 9200 -700 9200
+Wire Wire Line
+	-700 9300 -800 9300
+Text GLabel -200 10200 2    50   Output ~ 0
+~RST
+Wire Wire Line
+	-200 10200 -800 10200
+Text GLabel -200 10000 2    50   Output ~ 0
+~ARD_OVR
+Wire Wire Line
+	-200 10000 -800 10000
+Wire Wire Line
+	12400 2500 12400 1900
+Wire Wire Line
+	12400 1900 13800 1900
+Wire Wire Line
+	13800 1900 13800 2700
+Wire Wire Line
+	13800 2700 13200 2700
+Wire Wire Line
+	12400 2600 12600 2600
+Wire Wire Line
+	13200 2500 13300 2500
+Text GLabel 13300 2500 2    50   Output ~ 0
+CLK_AVR
+$Comp
+L Device:R R?
+U 1 1 5DE5D837
+P -3550 9300
+F 0 "R?" V -3750 9300 50  0000 C CNN
+F 1 "4K7" V -3650 9300 50  0000 C CNN
+F 2 "" V -3620 9300 50  0001 C CNN
+F 3 "~" H -3550 9300 50  0001 C CNN
+	1    -3550 9300
+	0    1    1    0   
+$EndComp
+Text GLabel -3800 9300 0    50   Input ~ 0
+ISP_RESET
+Wire Wire Line
+	-3700 9300 -3800 9300
+$Comp
+L power:+5V #PWR?
+U 1 1 5DEBFF85
+P -3300 9300
+F 0 "#PWR?" H -3300 9150 50  0001 C CNN
+F 1 "+5V" H -3285 9473 50  0000 C CNN
+F 2 "" H -3300 9300 50  0001 C CNN
+F 3 "" H -3300 9300 50  0001 C CNN
+	1    -3300 9300
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-3300 9300 -3400 9300
+$Comp
+L Device:C_Small C?
+U 1 1 5DEF3A2B
+P -2600 10200
+F 0 "C?" H -2508 10246 50  0000 L CNN
+F 1 "10n" H -2508 10155 50  0000 L CNN
+F 2 "" H -2600 10200 50  0001 C CNN
+F 3 "~" H -2600 10200 50  0001 C CNN
+	1    -2600 10200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5DEF3AC9
+P -2600 10000
+F 0 "#PWR?" H -2600 9850 50  0001 C CNN
+F 1 "+5V" H -2585 10173 50  0000 C CNN
+F 2 "" H -2600 10000 50  0001 C CNN
+F 3 "" H -2600 10000 50  0001 C CNN
+	1    -2600 10000
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-2600 10000 -2600 10100
+$Comp
+L power:GND #PWR?
+U 1 1 5DF255AD
+P -2600 10400
+F 0 "#PWR?" H -2600 10150 50  0001 C CNN
+F 1 "GND" H -2595 10227 50  0000 C CNN
+F 2 "" H -2600 10400 50  0001 C CNN
+F 3 "" H -2600 10400 50  0001 C CNN
+	1    -2600 10400
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-2600 10300 -2600 10400
+$Comp
+L Device:C_Small C?
+U 1 1 5DF572FC
+P -3000 10200
+F 0 "C?" H -2908 10246 50  0000 L CNN
+F 1 "10n" H -2908 10155 50  0000 L CNN
+F 2 "" H -3000 10200 50  0001 C CNN
+F 3 "~" H -3000 10200 50  0001 C CNN
+	1    -3000 10200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5DF57302
+P -3000 10000
+F 0 "#PWR?" H -3000 9850 50  0001 C CNN
+F 1 "+5V" H -2985 10173 50  0000 C CNN
+F 2 "" H -3000 10000 50  0001 C CNN
+F 3 "" H -3000 10000 50  0001 C CNN
+	1    -3000 10000
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-3000 10000 -3000 10100
+$Comp
+L power:GND #PWR?
+U 1 1 5DF57309
+P -3000 10400
+F 0 "#PWR?" H -3000 10150 50  0001 C CNN
+F 1 "GND" H -2995 10227 50  0000 C CNN
+F 2 "" H -3000 10400 50  0001 C CNN
+F 3 "" H -3000 10400 50  0001 C CNN
+	1    -3000 10400
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	-3000 10300 -3000 10400
+Text Notes -3250 10750 0    50   ~ 0
+Close to pins 20 and 7
+Wire Wire Line
+	10300 9400 10350 9400
+Wire Wire Line
+	10350 9400 10400 9400
+Connection ~ 10350 9400
+Wire Wire Line
+	10350 9400 10350 9500
+Text GLabel 1900 5650 0    50   Input ~ 0
+A7
+Wire Wire Line
+	1900 5650 2000 5650
+Wire Wire Line
+	2000 5650 2000 5700
+Text GLabel 1900 5950 0    50   Input ~ 0
+A6
+Wire Wire Line
+	2000 5900 2000 5950
+Wire Wire Line
+	2000 5950 1900 5950
+Text Notes 1350 6300 0    50   ~ 0
+ARDUINO at 0x80\nPORTA at 0x81
+$Comp
+L 74xx:74LS74 U?
+U 2 1 5E1749F3
+P 17400 3200
+F 0 "U?" H 17250 3450 50  0000 C CNN
+F 1 "74LS74" H 17550 3450 50  0000 C CNN
+F 2 "" H 17400 3200 50  0001 C CNN
+F 3 "74xx/74hc_hct74.pdf" H 17400 3200 50  0001 C CNN
+	2    17400 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS74 U?
+U 1 1 5E174A95
+P 17400 4300
+F 0 "U?" H 17250 4550 50  0000 C CNN
+F 1 "74LS74" H 17550 4550 50  0000 C CNN
+F 2 "" H 17400 4300 50  0001 C CNN
+F 3 "74xx/74hc_hct74.pdf" H 17400 4300 50  0001 C CNN
+	1    17400 4300
+	1    0    0    -1  
+$EndComp
+Text GLabel 16900 4200 0    50   Input ~ 0
+HSYNC_RAW
+Text GLabel 16900 3100 0    50   Input ~ 0
+VIS_RAW
+Wire Wire Line
+	16900 4200 17100 4200
+Wire Wire Line
+	16900 3100 17100 3100
+$Comp
+L power:+5V #PWR?
+U 1 1 5E28AFBB
+P 17400 2800
+F 0 "#PWR?" H 17400 2650 50  0001 C CNN
+F 1 "+5V" H 17415 2973 50  0000 C CNN
+F 2 "" H 17400 2800 50  0001 C CNN
+F 3 "" H 17400 2800 50  0001 C CNN
+	1    17400 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	17400 2800 17400 2900
+$Comp
+L power:+5V #PWR?
+U 1 1 5E2B9A1E
+P 17400 3900
+F 0 "#PWR?" H 17400 3750 50  0001 C CNN
+F 1 "+5V" H 17415 4073 50  0000 C CNN
+F 2 "" H 17400 3900 50  0001 C CNN
+F 3 "" H 17400 3900 50  0001 C CNN
+	1    17400 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	17400 3900 17400 4000
+$Comp
+L power:+5V #PWR?
+U 1 1 5E345A93
+P 17800 3500
+F 0 "#PWR?" H 17800 3350 50  0001 C CNN
+F 1 "+5V" H 17815 3673 50  0000 C CNN
+F 2 "" H 17800 3500 50  0001 C CNN
+F 3 "" H 17800 3500 50  0001 C CNN
+	1    17800 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	17800 3500 17800 3550
+Wire Wire Line
+	17800 3550 17400 3550
+Wire Wire Line
+	17400 3550 17400 3500
+$Comp
+L power:+5V #PWR?
+U 1 1 5E374AC3
+P 17800 4600
+F 0 "#PWR?" H 17800 4450 50  0001 C CNN
+F 1 "+5V" H 17815 4773 50  0000 C CNN
+F 2 "" H 17800 4600 50  0001 C CNN
+F 3 "" H 17800 4600 50  0001 C CNN
+	1    17800 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	17800 4600 17800 4650
+Wire Wire Line
+	17800 4650 17400 4650
+Wire Wire Line
+	17400 4650 17400 4600
+NoConn ~ 17700 4400
+NoConn ~ 17700 3300
+Text GLabel 17800 4200 2    50   Output ~ 0
+HSYNC
+Wire Wire Line
+	17800 4200 17700 4200
+Text GLabel 17800 3100 2    50   Output ~ 0
+VIS
+Wire Wire Line
+	17800 3100 17700 3100
+Text GLabel 16900 3300 0    50   Input ~ 0
+CHAR_TC
+Wire Wire Line
+	17100 3200 17000 3200
+Wire Wire Line
+	17000 3200 17000 3300
+Wire Wire Line
+	17000 3300 16900 3300
+Text GLabel 16900 4400 0    50   Input ~ 0
+CHAR_TC
+Wire Wire Line
+	17100 4300 17000 4300
+Wire Wire Line
+	17000 4300 17000 4400
+Wire Wire Line
+	17000 4400 16900 4400
 $EndSCHEMATC
