@@ -9,30 +9,64 @@ port_a = 0x81
     .area _CODE
 
 interrupt::
-    ; The HW introduces wait states until the low-going edge of HSYNC. The sync
-    ; pulse width + back porch is 96 + 48 = 144 dots. This is 72 CPU clocks.
-    ; Our prologue and setup takes the remainder of the line or 640 dots = 320
-    ; CPU clocks. As such we have 72 + 320 = 392 CPU clocks or t-states to play
-    ; with.
+    ; Our HSYNC pulse and display on signals look like the following:
+    ;
+    ;                  :       :                                :     :
+    ;        ____.     .________________________________________.     .____
+    ; HSYNC      |_____|       :                                |_____|
+    ;        _.        :       .__________________________.     :     :
+    ; DPY ON  |________________|                          |________________
+    ;                  :       :                          :     :     :
+    ;                  :--tBP--'------------tV------------'-tFP-'-tSP-:
+    ;                  :                                              :
+    ;                  '--------------------tL------------------------'
+    ;
+    ; BP = Back Porch, V = Visible, FP = Front Porch, SP = Sync Pulse
+    ;
+    ; The CPU is clocked so that each t-states is 2 pixels. Therefore there are
+    ; 4 t-states per character. We don't use the full horizonal display area so
+    ; for our signal the timing is as follows:
+    ;
+    ; tBP   =  14 chars =  56 t-states
+    ; tV    =  64 chars = 256 t-states
+    ; tFP   =  10 chars =  40 t-states
+    ; tSP   =  12 chars =  48 t-states
+    ; tL    = 100 chars = 400 t-states
 
-    ; Prologue 12*4 + 15 = 63 t-states
-    di
-    push    af
-    push    bc
-    push    de
-    push    hl
-    push    iy
+    ; After the Z80 acknowledges the interrups, the HW introduces wait states
+    ; until the low-going edge of HSYNC at which point this timing starts. We
+    ; take a full line of set up before we start displaying pixels.
 
-    ld a, #0x40         ; 7 t-states
-    ld i, a             ; 9 t-states
-    ld a, #0x0          ; 7 t-states
-    ld r, a             ; 9 t-states
+    ; We annotate instructions below with the number of t-states they use.
+
+    ; Interrupt handler prologue
+
+    di                  ; 4
+    push    af          ; 11
+    push    bc          ; 11
+    push    de          ; 11
+    push    hl          ; 11
+    push    iy          ; 15
 
     ; Initialise line loop count
     ld de, #360         ; 10 t-states
 
-    ; Remainder: 291 t-states = 71 * 4 + 7
-    xor #0
+                        ; total 73 t-states, want to be at start of front porch
+                        ; which is 360 t-states from start of routine so a
+                        ; remainder of 287
+
+    xor #0              ; 7-tstates
+
+    nop                 ; 70 nops = 280 t-states
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop                 ; 10
 
     nop
     nop
@@ -41,18 +75,9 @@ interrupt::
     nop
     nop
     nop
-
     nop
     nop
-    nop
-    nop
-    nop
-
-    nop
-    nop
-    nop
-    nop
-    nop
+    nop                 ; 20
 
     nop
     nop
@@ -63,6 +88,8 @@ interrupt::
     nop
     nop
     nop
+    nop                 ; 30
+
     nop
     nop
     nop
@@ -72,6 +99,8 @@ interrupt::
     nop
     nop
     nop
+    nop                 ; 40
+
     nop
     nop
     nop
@@ -81,33 +110,36 @@ interrupt::
     nop
     nop
     nop
+    nop                 ; 50
+
     nop
     nop
     nop
     nop
+    ;nop                ; FIXME: why an extra 24 t-states?
+    ;nop
+    ;nop
+    ;nop
+    ;nop
+    ;nop                 ; 60
+
     nop
     nop
     nop
     nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
+    ;nop
+    ;nop
+    ;nop
+    ;nop
+    ;nop
+    ;nop                ; 70
+
+    xor #0              ; 7 t-states
+    xor #0              ; 7 t-states
+    ld bc, #0x4000      ; 10 t-states
+
+    ; Now at start of front porch. The decrement and loop code at the end of the
+    ; interrupt_line_loop block takes 24 t-states which we use here
     nop
     nop
     nop
@@ -116,100 +148,41 @@ interrupt::
     nop
 
 interrupt_line_loop:
-    ld a, #0x01
-    ld b, #0x00
-    ld c, #port_a
+    ; We have tFP + tSP + tBP - 24 = 120 t-states for setup
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
 
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
 
-    ; Enable display output. NOTE: changing display enable doesn't actually take
-    ; effect until the end of the current character so there is some wiggle room
-    ; in this timing.
-    out (c), a
-    nop
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
 
-    ; Line is 640/2 = 320 clocks = 80 nops
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
+    nop                 ; 4 t-states
 
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
+    xor #0              ; 7 t-states
+    ld a, b             ; 4 t-states
+    ld i, a             ; 9 t-states
+    ld a, c             ; 4 t-states
+    add #0x40           ; 7 t-states
+    ld r, a             ; 9 t-states
 
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-
-    nop
-    nop
-    nop
-    nop
-    nop
-    ;nop  ; out(c), b takes time of three nops
+    ; Displaying line, 64 chars or 256 t-states
     ;nop
-    nop
-
-    ; Disable display output
-    out (c), b
-
+    ld c, a             ; 4 t-states
     nop
     nop
     nop
@@ -218,27 +191,74 @@ interrupt_line_loop:
     nop
     nop
 
-    ld a, #0
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
 
-    ; 4*4 = 16 t-states
-    ;nop
-    ;nop
-    ;nop
-    ;nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
 
-    ; 9+7 = 16 t-states
-    ld r, a
-    xor #0
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
 
-    ; Loop
-    dec de
-    ld a, d
-    or e
-    jp nz, interrupt_line_loop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
 
-    ld c, #port_a
-    ld a, #0
-    out(c), a
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+    ; Decrement de and loop = 24 t-states
+    dec de                      ; 6 t-states
+    ld a, d                     ; 4 t-states
+    or e                        ; 4 t-states
+    jp nz, interrupt_line_loop  ; 10 t-states
 
     ; Epilogue
     pop iy
