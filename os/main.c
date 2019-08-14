@@ -19,17 +19,17 @@ void main(void) {
   __asm__("ei");
 
   i = 0x01;
-  i = 0x55;
+  //i = 0x55;
   while(1) {
     unsigned char n=1<<(i&0x7);
     for(k=0; k<255; ++k) {
       ((unsigned char*)0x4000)[k] = i;
       //j=0; do { ++j; } while(j!=0x5000);
     }
-    //i<<=1;
-    //if(i == 0) { i = 0x01; }
-    i = ~i;
-    j=0; do { ++j; } while(j!=0xa000);
+    i<<=1;
+    if(i == 0) { i = 0x01; }
+    //i = ~i;
+    j=0; do { ++j; } while(j!=0x1000);
   }
 
   for(;;++i) {
