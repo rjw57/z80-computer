@@ -18,11 +18,12 @@ void main(void) {
   __asm__("im 1"); // mode 1 interrupts, jump to 0x0038
   __asm__("ei");
 
-  for(k=0; k<64; ++k) {
-    ((unsigned char*)0x4000)[k] = 0x55;
-    ((unsigned char*)0x4000)[k+64] = 0xaa;
-    ((unsigned char*)0x4000)[k+128] = 0x55;
-    ((unsigned char*)0x4000)[k+196] = 0xaa;
+  unsigned char* base = (unsigned char*)0x2000;
+  for(i=0; i<360/2; ++i, base+=128) {
+    for(k=0; k<64; ++k) {
+      base[k] = 0x55;
+      base[k+64] = 0xaa;
+    }
   }
 
   i = 0;

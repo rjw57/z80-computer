@@ -136,7 +136,7 @@ interrupt::
 
     xor #0              ; 7 t-states
     xor #0              ; 7 t-states
-    ld bc, #0x4000      ; 10 t-states
+    ld hl, #0x2000      ; 10 t-states
 
     ; Now at start of front porch. The decrement and loop code at the end of the
     ; interrupt_line_loop block takes 24 t-states which we use here
@@ -154,19 +154,9 @@ interrupt_line_loop:
     nop                 ; 4 t-states
     nop                 ; 4 t-states
     nop                 ; 4 t-states
-
-    nop                 ; 4 t-states
-    nop                 ; 4 t-states
-    nop                 ; 4 t-states
-    nop                 ; 4 t-states
     nop                 ; 4 t-states
 
     nop                 ; 4 t-states
-    nop                 ; 4 t-states
-    nop                 ; 4 t-states
-    nop                 ; 4 t-states
-    nop                 ; 4 t-states
-
     nop                 ; 4 t-states
     nop                 ; 4 t-states
     nop                 ; 4 t-states
@@ -174,15 +164,19 @@ interrupt_line_loop:
     nop                 ; 4 t-states
 
     xor #0              ; 7 t-states
-    ld a, b             ; 4 t-states
+    inc bc              ; 6 t-states
+    inc bc              ; 6 t-states
+    inc bc              ; 6 t-states
+
+    ld bc, #0x0040      ; 10 t-states
+    add hl, bc          ; 11 t-states
+    ld a, h             ; 4 t-states
     ld i, a             ; 9 t-states
-    ld a, c             ; 4 t-states
-    add #0x40           ; 7 t-states
+    ld a, l             ; 4 t-states
     ld r, a             ; 9 t-states
 
     ; Displaying line, 64 chars or 256 t-states
-    ;nop
-    ld c, a             ; 4 t-states
+    nop
     nop
     nop
     nop
