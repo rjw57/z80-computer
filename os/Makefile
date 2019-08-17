@@ -3,9 +3,9 @@ CC:=sdcc -mz80
 LD:=sdldz80
 MAKEBIN:=makebin
 
-ASFLAGS:=
+ASFLAGS:=-plosgff
 CFLAGS:=--std-c99
-LDFLAGS:=--no-std-crt0 --data-loc 0x0
+LDFLAGS:=--no-std-crt0 -Wl-b_DATA=0x0
 
 SOURCES:=$(wildcard *.c) $(wildcard *.s)
 OBJECTS:=$(patsubst %.c,%.rel,$(SOURCES)) $(patsubst %.s,%.rel,$(SOURCES))
@@ -24,7 +24,7 @@ sram.ihx sram.map: $(OBJECTS) Makefile
 	xxd -ps -c 1 -g 1 "$<" "$@"
 
 %.bin: %.ihx
-	$(MAKEBIN) -s 1024 "$<" "$@"
+	$(MAKEBIN) -s 8192 "$<" "$@"
 
 %.rel: %.s Makefile
 	$(AS) $(ASFLAGS) -o "$*" $<

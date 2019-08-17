@@ -1,3 +1,5 @@
+#include "gfx.h"
+
 static __sfr __at 0x80 arduino_port;
 static __sfr __at 0x81 port_a;
 
@@ -18,20 +20,39 @@ void main(void) {
   __asm__("im 1"); // mode 1 interrupts, jump to 0x0038
   __asm__("ei");
 
-  unsigned char* base = (unsigned char*)0x2000;
-  for(i=0; i<360/2; ++i, base+=128) {
+#if 0
+  unsigned char* base = gfx_screen;
+  for(i=0; i<360>>2; ++i, base+=128) {
     for(k=0; k<64; ++k) {
       base[k] = 0x55;
       base[k+64] = 0xaa;
     }
   }
 
-  i = 0;
+  gfx_draw_ch('R', 40, -1);
+  gfx_draw_ch('A', 0, 0);
+  gfx_draw_ch('G', -2, 48);
+  gfx_draw_ch('G', -1, 40);
+  gfx_draw_ch('G', 1, 32);
+  gfx_draw_ch('B', 32, 2);
+  gfx_draw_ch('C', gfx_screen_width-8, 2);
+  gfx_draw_ch('D', gfx_screen_width-4, 20);
+  gfx_draw_ch('X', 10, 10);
+  gfx_draw_ch('P', 52, gfx_screen_height-20);
+  gfx_draw_ch('n', 56, gfx_screen_height-8);
+  gfx_draw_ch('Z', 64, gfx_screen_height-3);
+#endif
+
+  i=0;
+  gfx_clear_screen();
   while(1) {
+    gfx_put_ch(i);
     port_a = ++i;
-    j=0; do { ++j; } while(j!=0x5000);
+    if(i == 0) { gfx_flip_mask = ~gfx_flip_mask; }
+    j=0; do { ++j; } while(j!=0x1000);
   }
 
+#if 0
   i = 0x01;
   //i = 0x55;
   while(1) {
@@ -49,4 +70,5 @@ void main(void) {
     //port_a = i;
     j=0; do { ++j; } while(j!=0x5000);
   }
+#endif
 }

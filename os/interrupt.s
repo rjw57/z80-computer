@@ -41,15 +41,24 @@ interrupt::
 
     ; Interrupt handler prologue
 
-    di                  ; 4
-    push    af          ; 11
-    push    bc          ; 11
-    push    de          ; 11
-    push    hl          ; 11
-    push    iy          ; 15
+    ex af,af'           ; 4
+    exx                 ; 4
+    xor #0
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop                 ; 4
 
     ; Initialise line loop count
-    ld de, #360         ; 10 t-states
+    ld de, #352         ; 10 t-states
 
                         ; total 73 t-states, want to be at start of front porch
                         ; which is 360 t-states from start of routine so a
@@ -136,7 +145,7 @@ interrupt::
 
     xor #0              ; 7 t-states
     xor #0              ; 7 t-states
-    ld hl, #0x2000      ; 10 t-states
+    ld hl, #0x4000-0x40      ; 10 t-states
 
     ; Now at start of front porch. The decrement and loop code at the end of the
     ; interrupt_line_loop block takes 24 t-states which we use here
@@ -255,11 +264,8 @@ interrupt_line_loop:
     jp nz, interrupt_line_loop  ; 10 t-states
 
     ; Epilogue
-    pop iy
-    pop hl
-    pop de
-    pop bc
-    pop af
+    exx                 ; 4
+    ex af,af'           ; 4
     ei
     reti
 

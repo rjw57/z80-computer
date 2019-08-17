@@ -5,6 +5,6 @@
 *.ihx
 *.bin
 *.hex
-*.map
 *.lk
+*.map
 *.noi
