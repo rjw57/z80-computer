@@ -1715,7 +1715,7 @@ Wire Wire Line
 Wire Wire Line
 	5600 5500 5500 5500
 Text GLabel 5500 5650 0    50   Input ~ 0
-~REFRESH
+~RFSH_VALID
 Wire Wire Line
 	5500 5650 5550 5650
 Wire Wire Line
@@ -2438,4 +2438,87 @@ F 3 "" H 14600 1700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 15300 1400
+Wire Wire Line
+	15100 6600 14900 6600
+Wire Wire Line
+	14900 6700 15100 6700
+Wire Wire Line
+	14900 6800 15100 6800
+Wire Wire Line
+	15100 6900 14900 6900
+Wire Wire Line
+	14900 7000 15100 7000
+Wire Wire Line
+	15100 7100 14900 7100
+Wire Wire Line
+	14900 7200 15100 7200
+Wire Wire Line
+	15100 7300 14900 7300
+$Comp
+L Device:R_Network08_US RN?
+U 1 1 5E64502A
+P 15300 6900
+F 0 "RN?" V 15817 6900 50  0000 C CNN
+F 1 "R_Network08_US" V 15726 6900 50  0000 C CNN
+F 2 "Resistor_THT:R_Array_SIP9" V 15775 6900 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 15300 6900 50  0001 C CNN
+	1    15300 6900
+	0    1    -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5E645031
+P 15600 7400
+F 0 "#PWR?" H 15600 7150 50  0001 C CNN
+F 1 "GND" H 15605 7227 50  0000 C CNN
+F 2 "" H 15600 7400 50  0001 C CNN
+F 3 "" H 15600 7400 50  0001 C CNN
+	1    15600 7400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15500 7300 15600 7300
+Wire Wire Line
+	15600 7300 15600 7400
+Text GLabel 14900 6600 0    50   BiDi ~ 0
+D0
+Text GLabel 14900 6700 0    50   BiDi ~ 0
+D1
+Text GLabel 14900 6800 0    50   BiDi ~ 0
+D2
+Text GLabel 14900 6900 0    50   BiDi ~ 0
+D3
+Text GLabel 14900 7000 0    50   BiDi ~ 0
+D4
+Text GLabel 14900 7100 0    50   BiDi ~ 0
+D5
+Text GLabel 14900 7200 0    50   BiDi ~ 0
+D6
+Text GLabel 14900 7300 0    50   BiDi ~ 0
+D7
+Text GLabel 1400 8800 0    50   Input ~ 0
+~MEM_REQ
+Text GLabel 1400 9000 0    50   Input ~ 0
+~REFRESH
+$Comp
+L 74xx:74LS32 U?
+U 2 1 5E76DC2D
+P 1900 8900
+F 0 "U?" H 1900 9225 50  0000 C CNN
+F 1 "74LS32" H 1900 9134 50  0000 C CNN
+F 2 "" H 1900 8900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1900 8900 50  0001 C CNN
+	2    1900 8900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1400 9000 1600 9000
+Wire Wire Line
+	1600 8800 1400 8800
+Text GLabel 2400 8900 2    50   Output ~ 0
+~RFSH_VALID
+Wire Wire Line
+	2400 8900 2200 8900
+Text Notes 15400 1750 0    50   ~ 0
+Open Question: sync VIS to CHAR_TC?
 $EndSCHEMATC

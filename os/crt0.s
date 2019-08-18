@@ -60,7 +60,7 @@
     .org    0x100
 init:
     ;; Set stack pointer directly above top of memory.
-    ld  sp,#0x0000
+    ld      sp,#0x8000
 
     ;; Initialise global variables
     call    gsinit

@@ -5,7 +5,7 @@ static __sfr __at 0x81 port_a;
 
 void main(void) {
   unsigned char i;
-  unsigned int j, k;
+  unsigned int j;
 
   port_a = 0;
 
@@ -46,10 +46,12 @@ void main(void) {
   i=0;
   gfx_clear_screen();
   while(1) {
+    //gfx_draw_ch(i, 0, 0, 0x00);
     gfx_put_ch(i);
     port_a = ++i;
     if(i == 0) { gfx_flip_mask = ~gfx_flip_mask; }
-    j=0; do { ++j; } while(j!=0x1000);
+    //j=0; do { ++j; } while(j!=0x1000);
+    j=0; do { ++j; } while(j!=1);
   }
 
 #if 0

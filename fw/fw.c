@@ -269,7 +269,7 @@ ISR(TIMER0_OVF_vect) {
       // a few microseconds to make sure the Z80 has time to register the
       // interrupt.
       reset_pin(CPU_INT_BAR_PORT_NAME, CPU_INT_BAR_PORT_BIT);
-      _delay_us(10);
+      _delay_us(20);
       set_pin(CPU_INT_BAR_PORT_NAME, CPU_INT_BAR_PORT_BIT);
       break;
   }

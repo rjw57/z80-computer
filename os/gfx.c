@@ -4,15 +4,19 @@
 #include "gfx.h"
 #include "font.h"
 
-int16_t gfx_screen_width = 512;
-int16_t gfx_screen_height = 176;
+const int16_t gfx_screen_width = 512;
+const int16_t gfx_screen_height = 176;
 int16_t gfx_cursor_x = 0;
 int16_t gfx_cursor_y = 0;
 uint8_t gfx_flip_mask = 0;
-uint8_t* gfx_screen = (uint8_t*)(0x4000);
+
+// The screen is 64 * 176 = 11264 bytes in length or 0x2C00 in hex. If we allow
+// a page for the stack, the highest start address is 0x8000 - 0x2C00 - 0x100 or
+// 0x5300.
+uint8_t* gfx_screen = (void*)(0x5300);
 
 void gfx_clear_screen(void) {
-    memset(gfx_screen, 0, gfx_screen_height<<6);
+  memset(gfx_screen, 0, gfx_screen_height<<6);
 }
 
 void gfx_scroll_screen(int16_t rows) {
@@ -40,25 +44,32 @@ void gfx_put_ch(uint8_t c) {
 }
 
 void gfx_draw_ch(uint8_t c, int16_t x, int16_t y, uint8_t flip_mask) {
+#if 0
+  uint8_t* cursor = gfx_screen + (x>>3) + (((unsigned int)y)<<6);
+  const uint8_t* font_data = FONT + (((unsigned int)c)<<3);
+  uint8_t i = 8;
+  for(; i; i--, cursor+=64, font_data++) {
+    *cursor = *font_data ^ flip_mask;
+  }
+#else
   if(x <= -8) { return; }
   if(y <= -8) { return; }
   if(x >= gfx_screen_width) { return; }
   if(y >= gfx_screen_height) { return; }
 
   uint8_t i = (y <= gfx_screen_height - 8) ? 8 : gfx_screen_height-y;
-  uint8_t* font_data = FONT + (((unsigned int)c)<<3);
-  volatile uint8_t* cursor = gfx_screen;
+  const uint8_t* font_data = FONT + (((unsigned int)c)<<3);
 
+  uint8_t* cursor = gfx_screen;
   cursor += (x < 0) ? -1 : (x>>3);
   cursor += (y < 0) ? 0 : (((unsigned int)y)<<6);
 
   if(y < 0) { i += y; font_data -= y; }
 
   uint8_t l_shift = x & 0x7;
-  uint8_t f, v;
   if(l_shift) {
     // Un-aligned to char cell boundary
-
+    uint8_t f, v;
     uint8_t r_shift = 8 - l_shift;
     uint8_t mask = 0xff >> l_shift;
     _Bool draw_left = x >= 0;
@@ -80,8 +91,8 @@ void gfx_draw_ch(uint8_t c, int16_t x, int16_t y, uint8_t flip_mask) {
   } else {
     // Aligned to char cell boundary
     for(; i>0; i--, cursor+=64, font_data++) {
-      f = (*font_data);
-      *cursor = f ^ flip_mask;
+      *cursor = *font_data ^ flip_mask;
     }
   }
+#endif
 }

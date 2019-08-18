@@ -4,8 +4,8 @@ LD:=sdldz80
 MAKEBIN:=makebin
 
 ASFLAGS:=-plosgff
-CFLAGS:=--std-c99
-LDFLAGS:=--no-std-crt0 -Wl-b_DATA=0x0
+CFLAGS:=--std-c99 --Werror
+LDFLAGS:=--no-std-crt0 -Wl-b_DATA=0x0 -Wl-b_CODE=0x100
 
 SOURCES:=$(wildcard *.c) $(wildcard *.s)
 OBJECTS:=$(patsubst %.c,%.rel,$(SOURCES)) $(patsubst %.s,%.rel,$(SOURCES))
