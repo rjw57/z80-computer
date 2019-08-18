@@ -9,6 +9,7 @@ const int16_t gfx_screen_height = 176;
 int16_t gfx_cursor_x = 0;
 int16_t gfx_cursor_y = 0;
 uint8_t gfx_flip_mask = 0;
+uint8_t* gfx_font_base = FONT - 256;
 
 // The screen is 64 * 176 = 11264 bytes in length or 0x2C00 in hex. If we allow
 // a page for the stack, the highest start address is 0x8000 - 0x2C00 - 0x100 or
@@ -55,7 +56,7 @@ void gfx_draw_ch(uint8_t c, int16_t x, int16_t y, uint8_t flip_mask) {
   if(y >= gfx_screen_height) { return; }
 
   uint8_t i = (y <= gfx_screen_height - 8) ? 8 : gfx_screen_height-y;
-  const uint8_t* font_data = FONT + (((unsigned int)c)<<3);
+  const uint8_t* font_data = gfx_font_base + (((unsigned int)c)<<3);
 
   uint8_t* cursor = gfx_screen;
   cursor += (x < 0) ? -1 : (x>>3);

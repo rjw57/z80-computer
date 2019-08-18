@@ -8,6 +8,8 @@ typedef enum {
 } gfx_draw_mode_t;
 
 extern uint8_t* gfx_screen;
+extern uint8_t* gfx_font_base;
+
 extern const int16_t gfx_screen_width;
 extern const int16_t gfx_screen_height;
 extern uint8_t gfx_flip_mask;

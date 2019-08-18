@@ -23,6 +23,10 @@ void main(void) {
   i=0; do { gfx_put_ch(i++); } while(i != 0);
 
   while(1) {
-    gfx_point(rand() % gfx_screen_width, rand() % gfx_screen_height, GFX_TOGGLE);
+    gfx_point(
+        rand() % gfx_screen_width,
+        64 + (rand() % (gfx_screen_height - 64)),
+        GFX_TOGGLE
+    );
   }
 }
