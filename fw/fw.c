@@ -16,6 +16,9 @@
 #define VSYNC_PORT_BIT    2   // =OC1B, pin 16, fixed by hardware
 #define VSYNC_PORT_NAME   B
 
+#define ARD_WR_BAR_PORT_BIT       2 // = INT0, pin 4, fixed by hardware
+#define ARD_WR_BAR_PORT_NAME      D
+
 #define CPU_INT_BAR_PORT_BIT      0
 #define CPU_INT_BAR_PORT_NAME     B
 #define CPU_RD_BAR_PORT_BIT       7
@@ -39,6 +42,9 @@
 
 #define ARD_OVR_BAR_PORT_BIT      4
 #define ARD_OVR_BAR_PORT_NAME     D
+
+#define STATUS_LED_PORT_BIT       7
+#define STATUS_LED_PORT_NAME      B
 
 // RAM contents
 #define sram_bin ram_contents
@@ -199,7 +205,24 @@ void set_data(uint8_t data) {
 
 // Read value in shift reg.
 uint8_t read_data() {
-  return 0x00;
+  uint8_t data = 0;
+
+  // the code here is slightly awkward because we want to leave SR_CLK high
+  // after clocking in data so that writing to the arduino port works.
+  reset_pin(SR_MODE_PORT_NAME, SR_MODE_PORT_BIT); // shifting data
+  reset_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT); // prepare to clock data
+
+  for(uint8_t i=0; i<8; ++i) {
+    reset_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT);
+    data <<= 1;
+    if(read_pin(SR_OUT_PORT_NAME, SR_OUT_PORT_BIT)) { data |= 1; }
+    set_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT);
+  }
+
+  set_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT);
+  set_pin(SR_MODE_PORT_NAME, SR_MODE_PORT_BIT); // loading data unless register is being read
+
+  return data;
 }
 
 // Override crystal-based clock. CPU clock is now OV_CLK output.
@@ -267,12 +290,21 @@ ISR(TIMER0_OVF_vect) {
     case v_sync_width + v_back_porch - 2:
       // Our video driver takes two lines to respond to the interrupt. We delay
       // a few microseconds to make sure the Z80 has time to register the
-      // interrupt.
+      // interrupt. This is tyo avoid having HW to latch the INT_BAR line and
+      // set it after INTACK_BAR.
+      //
+      // The longest time the Z80 will take to respond is the length of the
+      // longest instruction, 23 t-states. At the 25.175MHz dot clock this is
+      // appproximately 1 µs. Wait 2 to make sure.
       reset_pin(CPU_INT_BAR_PORT_NAME, CPU_INT_BAR_PORT_BIT);
-      _delay_us(20);
+      _delay_us(2);
       set_pin(CPU_INT_BAR_PORT_NAME, CPU_INT_BAR_PORT_BIT);
       break;
   }
+}
+
+ISR(INT0_vect) {
+  // TODO
 }
 
 void setup_timers() {
@@ -376,6 +408,9 @@ void setup() {
   set_pin_output(VSYNC_PORT_NAME, VSYNC_PORT_BIT);
   set_pin_output(VIS_PORT_NAME, VIS_PORT_BIT);
 
+  // Arduino write port interrupt
+  set_pin_input(ARD_WR_BAR_PORT_NAME, ARD_WR_BAR_PORT_BIT);
+
   setup_timers();
 
   // Reset memory image copy code loop
@@ -392,6 +427,10 @@ void setup() {
   // Setup clock override pins
   set_pin_output(OV_CLK_PORT_NAME, OV_CLK_PORT_BIT);
   set_pin_output(CLK_SEL_PORT_NAME, CLK_SEL_PORT_BIT);
+
+  // Setup status LED
+  reset_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
+  set_pin_output(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
 
   // Ensure we are the read device and set up data bus
   set_pin_input(SR_OUT_PORT_NAME, SR_OUT_PORT_BIT);
@@ -438,6 +477,16 @@ void setup() {
 }
 
 void loop() {
+  while(1) {
+    uint8_t data = read_data();
+    if(data & 0x10) {
+      set_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
+    } else {
+      reset_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
+    }
+    set_data(data);
+    _delay_ms(10);
+  }
 }
 
 int main(void) {

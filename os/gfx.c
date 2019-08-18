@@ -43,15 +43,12 @@ void gfx_put_ch(uint8_t c) {
   }
 }
 
+void gfx_put_str(const char* s) {
+  uint8_t c;
+  for(; (c = *s) != '\0'; ++s) { gfx_put_ch(c); }
+}
+
 void gfx_draw_ch(uint8_t c, int16_t x, int16_t y, uint8_t flip_mask) {
-#if 0
-  uint8_t* cursor = gfx_screen + (x>>3) + (((unsigned int)y)<<6);
-  const uint8_t* font_data = FONT + (((unsigned int)c)<<3);
-  uint8_t i = 8;
-  for(; i; i--, cursor+=64, font_data++) {
-    *cursor = *font_data ^ flip_mask;
-  }
-#else
   if(x <= -8) { return; }
   if(y <= -8) { return; }
   if(x >= gfx_screen_width) { return; }
@@ -94,5 +91,4 @@ void gfx_draw_ch(uint8_t c, int16_t x, int16_t y, uint8_t flip_mask) {
       *cursor = *font_data ^ flip_mask;
     }
   }
-#endif
 }

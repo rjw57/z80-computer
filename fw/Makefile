@@ -76,10 +76,10 @@ EXTRAINCDIRS =
 #  -Wa,...:   tell GCC to pass this to the assembler.
 #    -ahlms:  create assembler listing
 CFLAGS = -g -O$(OPT) \
--funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums \
--Wall \
--Wa,-adhlns=$(<:.c=.lst) \
-$(patsubst %,-I%,$(EXTRAINCDIRS))
+	-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums \
+	-Wall -Werror \
+	-Wa,-adhlns=$(<:.c=.lst) \
+	$(patsubst %,-I%,$(EXTRAINCDIRS))
 
 
 # Set a "language standard" compiler flag.

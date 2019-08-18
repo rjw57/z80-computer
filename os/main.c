@@ -43,15 +43,20 @@ void main(void) {
   gfx_draw_ch('Z', 64, gfx_screen_height-3);
 #endif
 
-  i=0;
+  i=0; j=0;
   gfx_clear_screen();
   while(1) {
     //gfx_draw_ch(i, 0, 0, 0x00);
-    gfx_put_ch(i);
-    port_a = ++i;
-    if(i == 0) { gfx_flip_mask = ~gfx_flip_mask; }
+    //gfx_put_ch(i);
+    gfx_put_str(" Clem smells! "); gfx_flip_mask = ~gfx_flip_mask;
+    arduino_port = i;
+    port_a = i;
+    ++i;
+    //port_a = arduino_port;
+    //port_a = i;
+    //if(i == 0) { gfx_flip_mask = ~gfx_flip_mask; }
     //j=0; do { ++j; } while(j!=0x1000);
-    j=0; do { ++j; } while(j!=1);
+    //j=0; do { ++j; } while(j!=1);
   }
 
 #if 0
