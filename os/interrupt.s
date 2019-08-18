@@ -1,11 +1,8 @@
 ; Interrupt service routine
     .module isr
-    
+
     .globl interrupt
     .globl _gfx_screen
-
-; Output port
-port_a = 0x81
 
     .area _CODE
 

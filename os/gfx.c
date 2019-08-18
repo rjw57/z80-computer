@@ -92,3 +92,20 @@ void gfx_draw_ch(uint8_t c, int16_t x, int16_t y, uint8_t flip_mask) {
     }
   }
 }
+
+void gfx_point(int16_t x, int16_t y, gfx_draw_mode_t mode) {
+  if((x < 0) || (x >= gfx_screen_width) || (y < 0) || (y >= gfx_screen_height)) { return; }
+  uint8_t* cursor = gfx_screen + (x>>3) + (((unsigned int)y)<<6);
+  uint8_t pt_mask = 0x80 >> (x & 0x7);
+  switch(mode) {
+    case GFX_RESET:
+      *cursor &= ~pt_mask;
+      break;
+    case GFX_SET:
+      *cursor |= pt_mask;
+      break;
+    case GFX_TOGGLE:
+      *cursor ^= pt_mask;
+      break;
+  }
+}

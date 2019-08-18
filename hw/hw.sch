@@ -600,12 +600,8 @@ F 3 "" H 6500 9100 50  0001 C CNN
 	1    6500 9100
 	0    -1   -1   0   
 $EndComp
-Text GLabel 5500 9200 0    50   Input ~ 0
-SR_MODE
-Text GLabel 5500 9400 0    50   Input ~ 0
-~ARD_RD
 Wire Wire Line
-	6450 9700 6600 9700
+	6500 9700 6600 9700
 Wire Wire Line
 	6300 9900 6600 9900
 $Comp
@@ -793,7 +789,7 @@ Wire Wire Line
 	2000 5450 2000 5400
 Wire Wire Line
 	2000 5400 2100 5400
-Text GLabel 3800 5600 2    50   Output ~ 0
+Text GLabel 3800 5600 2    50   BiDi ~ 0
 ~ARD_RD
 Text GLabel 11500 9000 2    50   Output ~ 0
 CLK_CHAR
@@ -1086,16 +1082,6 @@ Wire Wire Line
 Wire Wire Line
 	5700 10000 5500 10000
 Wire Wire Line
-	6300 9300 6400 9300
-Wire Wire Line
-	6400 9300 6400 9400
-Wire Wire Line
-	6400 9400 6600 9400
-Wire Wire Line
-	5500 9400 5600 9400
-Wire Wire Line
-	5700 9200 5500 9200
-Wire Wire Line
 	1450 2350 1550 2350
 Wire Wire Line
 	1450 2500 1500 2500
@@ -1103,20 +1089,15 @@ Wire Wire Line
 	1500 2500 1500 2450
 Wire Wire Line
 	1500 2450 1550 2450
-Wire Wire Line
-	5600 9400 5600 9600
-Connection ~ 5600 9400
-Wire Wire Line
-	5600 9400 5700 9400
 $Comp
 L power:GND #PWR011
 U 1 1 5D88A3F1
-P 6450 9700
-F 0 "#PWR011" H 6450 9450 50  0001 C CNN
-F 1 "GND" H 6455 9527 50  0000 C CNN
-F 2 "" H 6450 9700 50  0001 C CNN
-F 3 "" H 6450 9700 50  0001 C CNN
-	1    6450 9700
+P 6500 9700
+F 0 "#PWR011" H 6500 9450 50  0001 C CNN
+F 1 "GND" H 6505 9527 50  0000 C CNN
+F 2 "" H 6500 9700 50  0001 C CNN
+F 3 "" H 6500 9700 50  0001 C CNN
+	1    6500 9700
 	0    1    1    0   
 $EndComp
 Wire Wire Line
@@ -1165,7 +1146,7 @@ F 3 "http://www.nxp.com/documents/data_sheet/1N4148_1N4448.pdf" H 7950 1500 50  
 	1    7950 1500
 	1    0    0    -1  
 $EndComp
-Text GLabel 8200 1500 2    50   Output ~ 0
+Text GLabel 8200 1500 2    50   BiDi ~ 0
 ~ARD_RD
 Wire Wire Line
 	8200 1500 8100 1500
@@ -1179,17 +1160,6 @@ F 2 "" V 3480 5600 50  0001 C CNN
 F 3 "~" H 3550 5600 50  0001 C CNN
 	1    3550 5600
 	0    1    1    0   
-$EndComp
-$Comp
-L 74xx:74LS08 U4
-U 1 1 5E14BD34
-P 6000 9300
-F 0 "U4" H 6000 9625 50  0000 C CNN
-F 1 "74LS08" H 6000 9534 50  0000 C CNN
-F 2 "" H 6000 9300 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 6000 9300 50  0001 C CNN
-	1    6000 9300
-	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS245 U9
@@ -1376,8 +1346,6 @@ Wire Wire Line
 NoConn ~ 3100 5800
 NoConn ~ 3100 5900
 Wire Wire Line
-	5600 9600 6500 9600
-Wire Wire Line
 	6700 1400 7100 1400
 $Comp
 L 74xx:74LS32 U1
@@ -1400,11 +1368,6 @@ Wire Wire Line
 	6850 7000 6750 7000
 Wire Wire Line
 	6500 9100 6600 9100
-Wire Wire Line
-	6500 9300 6500 9600
-Connection ~ 6500 9600
-Wire Wire Line
-	6500 9600 6600 9600
 Text GLabel 1450 2650 0    50   Output ~ 0
 ~HALT
 Wire Wire Line
@@ -2157,7 +2120,7 @@ Text GLabel 2300 8400 2    50   Output ~ 0
 ISP_MISO
 Wire Wire Line
 	2300 8400 2200 8400
-Text GLabel 2100 7000 2    50   Input ~ 0
+Text GLabel 2100 7000 2    50   Output ~ 0
 ISP_MOSI
 Wire Wire Line
 	2100 7000 2000 7000
@@ -2165,9 +2128,9 @@ Text GLabel 2300 8300 2    50   Input ~ 0
 ISP_MOSI
 Wire Wire Line
 	2300 8300 2200 8300
-Text GLabel 1400 7000 0    50   Input ~ 0
+Text GLabel 1400 7000 0    50   Output ~ 0
 ISP_SCLK
-Text GLabel 1400 7100 0    50   Input ~ 0
+Text GLabel 1400 7100 0    50   Output ~ 0
 ISP_RESET
 Text GLabel 2300 9500 2    50   Input ~ 0
 ISP_RESET
@@ -2177,7 +2140,7 @@ Wire Wire Line
 	1400 7000 1500 7000
 Wire Wire Line
 	1500 7100 1400 7100
-Text GLabel 2300 8500 2    50   Output ~ 0
+Text GLabel 2300 8500 2    50   Input ~ 0
 ISP_SCLK
 Wire Wire Line
 	2300 8500 2200 8500
@@ -2201,7 +2164,7 @@ Text GLabel 2300 8000 2    50   Output ~ 0
 ~INT
 Wire Wire Line
 	2300 8000 2200 8000
-Text GLabel 2300 10400 2    50   Input ~ 0
+Text GLabel 2300 10400 2    50   BiDi ~ 0
 ~ARD_RD
 Wire Wire Line
 	2300 10400 2200 10400
@@ -2560,4 +2523,17 @@ Wire Wire Line
 	6700 1600 7100 1600
 Wire Wire Line
 	6700 1000 7100 1000
+Text GLabel 5500 9600 0    50   Input ~ 0
+~ARD_RD
+Wire Wire Line
+	5500 9600 6500 9600
+Text GLabel 5500 9400 0    50   Input ~ 0
+SR_MODE
+Wire Wire Line
+	5500 9400 6600 9400
+Wire Wire Line
+	6500 9300 6500 9600
+Connection ~ 6500 9600
+Wire Wire Line
+	6500 9600 6600 9600
 $EndSCHEMATC

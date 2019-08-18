@@ -21,8 +21,8 @@
 
 #define CPU_INT_BAR_PORT_BIT      0
 #define CPU_INT_BAR_PORT_NAME     B
-#define CPU_RD_BAR_PORT_BIT       7
-#define CPU_RD_BAR_PORT_NAME      D
+#define ARD_RD_BAR_PORT_BIT       7
+#define ARD_RD_BAR_PORT_NAME      D
 
 #define SR_CLK_PORT_BIT           0
 #define SR_CLK_PORT_NAME          C
@@ -88,6 +88,9 @@ const uint16_t whole_frame             =
 
 // Counter timer
 const double timer_freq           = dot_clock_freq / 2;   // MHz
+
+// Set by interupt handler if Arduino port is written to
+volatile bool data_in_port = false;
 
 // CPU frequency is half the dot clock. Configure this and include delay header.
 #define F_CPU (unsigned long)((dot_clock_freq / 2) * 1e6)
@@ -200,10 +203,11 @@ void set_data(uint8_t data) {
   }
 
   set_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT);
-  set_pin(SR_MODE_PORT_NAME, SR_MODE_PORT_BIT); // loading data unless register is being read
+  set_pin(SR_MODE_PORT_NAME, SR_MODE_PORT_BIT); // ready for CPU to write to port
 }
 
-// Read value in shift reg.
+// Read value in shift reg. Destroy shift reg contents replacing it with all
+// zeros.
 uint8_t read_data() {
   uint8_t data = 0;
 
@@ -211,6 +215,7 @@ uint8_t read_data() {
   // after clocking in data so that writing to the arduino port works.
   reset_pin(SR_MODE_PORT_NAME, SR_MODE_PORT_BIT); // shifting data
   reset_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT); // prepare to clock data
+  reset_pin(SR_SER_PORT_NAME, SR_SER_PORT_BIT);
 
   for(uint8_t i=0; i<8; ++i) {
     reset_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT);
@@ -220,9 +225,21 @@ uint8_t read_data() {
   }
 
   set_pin(SR_CLK_PORT_NAME, SR_CLK_PORT_BIT);
-  set_pin(SR_MODE_PORT_NAME, SR_MODE_PORT_BIT); // loading data unless register is being read
+  set_pin(SR_MODE_PORT_NAME, SR_MODE_PORT_BIT); // ready for CPU to write to port
 
   return data;
+}
+
+// *OUTSIDE OF INITIAL MEMORY LOAD* call this to disable Arduino reads from port
+// while setting/reading data
+void disable_arduino_port() {
+  set_pin(ARD_RD_BAR_PORT_NAME, ARD_RD_BAR_PORT_BIT);
+  set_pin_output(ARD_RD_BAR_PORT_NAME, ARD_RD_BAR_PORT_BIT);
+}
+
+// *OUTSIDE OF INITIAL MEMORY LOAD* call this to enable Arduino reads from port
+void enable_arduino_port() {
+  set_pin_input(ARD_RD_BAR_PORT_NAME, ARD_RD_BAR_PORT_BIT);
 }
 
 // Override crystal-based clock. CPU clock is now OV_CLK output.
@@ -239,7 +256,7 @@ void release_clock() {
 
 void tick_update() {
   static bool prev_rd = false;
-  bool rd = !read_pin(CPU_RD_BAR_PORT_NAME, CPU_RD_BAR_PORT_BIT);
+  bool rd = !read_pin(ARD_RD_BAR_PORT_NAME, ARD_RD_BAR_PORT_BIT);
   if(!rd && prev_rd) {
     copy_loop_advance();
     set_data(next_byte);
@@ -304,7 +321,7 @@ ISR(TIMER0_OVF_vect) {
 }
 
 ISR(INT0_vect) {
-  // TODO
+  data_in_port = true;
 }
 
 void setup_timers() {
@@ -399,6 +416,14 @@ void setup_timers() {
   GTCCR = 0;
 }
 
+void setup_pin_interrupts() {
+  // INT0 interrupt triggered by rising edge on ARD_WR_BAR pin.
+  EICRA = _BV(ISC01) | _BV(ISC00);
+
+  // Enable interrupts
+  EIMSK = _BV(INT0);
+}
+
 void setup() {
   // disable interrupts while performing setup
   cli();
@@ -413,6 +438,8 @@ void setup() {
 
   setup_timers();
 
+  setup_pin_interrupts();
+
   // Reset memory image copy code loop
   copy_loop_reset();
 
@@ -420,7 +447,7 @@ void setup() {
   sei();
 
   // Setup CPU control lines
-  set_pin_input(CPU_RD_BAR_PORT_NAME, CPU_RD_BAR_PORT_BIT);
+  set_pin_input(ARD_RD_BAR_PORT_NAME, ARD_RD_BAR_PORT_BIT);
   set_pin(CPU_INT_BAR_PORT_NAME, CPU_INT_BAR_PORT_BIT);
   set_pin_output(CPU_INT_BAR_PORT_NAME, CPU_INT_BAR_PORT_BIT);
 
@@ -450,21 +477,11 @@ void setup() {
   claim_clock();
   reset_on();
   reset_off();
-#if 0
-  while(1) {
-    reset_pin(OV_CLK_PORT_NAME, OV_CLK_PORT_BIT);
-    _delay_ms(500);
-    set_pin(OV_CLK_PORT_NAME, OV_CLK_PORT_BIT);
-    _delay_ms(500);
-  }
-#endif
   set_pin(RST_BAR_PORT_NAME, RST_BAR_PORT_BIT);
 
-#if 1
   do {
     tick();
   } while(ram_bytes_sent < ram_contents_len);
-#endif
 
   reset_on();
   release_read_dev();
@@ -472,20 +489,29 @@ void setup() {
   release_clock();
 
   set_data(0x00);
+  data_in_port = false;
 
   reset_off();
 }
 
 void loop() {
   while(1) {
-    uint8_t data = read_data();
-    if(data & 0x10) {
-      set_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
-    } else {
-      reset_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
+    if(data_in_port) {
+      disable_arduino_port();
+      uint8_t data = read_data();
+      enable_arduino_port();
+      data_in_port = false;
+
+      if(data & 0x01) {
+        set_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
+      } else {
+        reset_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
+      }
+
+      disable_arduino_port();
+      set_data(data);
+      enable_arduino_port();
     }
-    set_data(data);
-    _delay_ms(10);
   }
 }
 

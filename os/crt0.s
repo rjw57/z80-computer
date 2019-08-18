@@ -62,6 +62,10 @@ init:
     ;; Set stack pointer directly above top of memory.
     ld      sp,#0x8000
 
+    ;; Set interrupt mode and enable interrupts
+    im 1
+    ei
+
     ;; Initialise global variables
     call    gsinit
     call    _main
