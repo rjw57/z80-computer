@@ -2474,45 +2474,6 @@ Wire Wire Line
 	7700 2500 7500 2500
 Text Notes 15400 1750 0    50   ~ 0
 Open Question: sync VIS to CHAR_TC?
-$Comp
-L Device:LED D?
-U 1 1 5E7A4E6B
-P 2850 8700
-F 0 "D?" H 2841 8916 50  0000 C CNN
-F 1 "LED" H 2841 8825 50  0000 C CNN
-F 2 "" H 2850 8700 50  0001 C CNN
-F 3 "~" H 2850 8700 50  0001 C CNN
-	1    2850 8700
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	2200 8700 2700 8700
-$Comp
-L power:GND #PWR?
-U 1 1 5E7D7FFB
-P 3100 9100
-F 0 "#PWR?" H 3100 8850 50  0001 C CNN
-F 1 "GND" H 3105 8927 50  0000 C CNN
-F 2 "" H 3100 9100 50  0001 C CNN
-F 3 "" H 3100 9100 50  0001 C CNN
-	1    3100 9100
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	3000 8700 3100 8700
-$Comp
-L Device:R R?
-U 1 1 5E80B2C2
-P 3100 8850
-F 0 "R?" V 2900 8850 50  0000 C CNN
-F 1 "220" V 3000 8850 50  0000 C CNN
-F 2 "" V 3030 8850 50  0001 C CNN
-F 3 "~" H 3100 8850 50  0001 C CNN
-	1    3100 8850
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	3100 9000 3100 9100
 Text GLabel 2500 9900 2    50   Input ~ 0
 ~ARD_WR
 Wire Wire Line
@@ -2536,4 +2497,79 @@ Wire Wire Line
 Connection ~ 6500 9600
 Wire Wire Line
 	6500 9600 6600 9600
+$Comp
+L Connector:Mini-DIN-6 J?
+U 1 1 5ECFB4A4
+P 12300 1100
+F 0 "J?" H 12300 1467 50  0000 C CNN
+F 1 "Mini-DIN-6" H 12300 1376 50  0000 C CNN
+F 2 "" H 12300 1100 50  0001 C CNN
+F 3 "http://service.powerdynamics.com/ec/Catalog17/Section%2011.pdf" H 12300 1100 50  0001 C CNN
+	1    12300 1100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5ECFB971
+P 11900 1100
+F 0 "#PWR?" H 11900 950 50  0001 C CNN
+F 1 "+5V" H 11915 1273 50  0000 C CNN
+F 2 "" H 11900 1100 50  0001 C CNN
+F 3 "" H 11900 1100 50  0001 C CNN
+	1    11900 1100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5ECFB9E4
+P 12700 1100
+F 0 "#PWR?" H 12700 850 50  0001 C CNN
+F 1 "GND" H 12705 927 50  0000 C CNN
+F 2 "" H 12700 1100 50  0001 C CNN
+F 3 "" H 12700 1100 50  0001 C CNN
+	1    12700 1100
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	12600 1100 12700 1100
+Wire Wire Line
+	11900 1100 12000 1100
+Text GLabel 12700 1250 2    50   BiDi ~ 0
+PS2_DATA
+Wire Wire Line
+	12700 1250 12650 1250
+Wire Wire Line
+	12650 1250 12650 1200
+Wire Wire Line
+	12650 1200 12600 1200
+Text GLabel 12700 950  2    50   Output ~ 0
+PS2_CLK
+Wire Wire Line
+	12700 950  12650 950 
+Wire Wire Line
+	12650 950  12650 1000
+Wire Wire Line
+	12650 1000 12600 1000
+NoConn ~ 12000 1000
+NoConn ~ 12000 1200
+Text GLabel 2300 8750 2    50   Input ~ 0
+PS2_CLK
+Text GLabel 2500 8100 2    50   BiDi ~ 0
+PS2_DATA
+Wire Wire Line
+	2300 8750 2250 8750
+Wire Wire Line
+	2250 8750 2250 8700
+Wire Wire Line
+	2250 8700 2200 8700
+Wire Wire Line
+	2500 8100 2200 8100
+Text GLabel 2300 9800 2    50   Output ~ 0
+TXD
+Text GLabel 2300 9700 2    50   Input ~ 0
+RXD
+Wire Wire Line
+	2300 9800 2200 9800
+Wire Wire Line
+	2300 9700 2200 9700
 $EndSCHEMATC

@@ -3,6 +3,7 @@
 #include <avr/pgmspace.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 // VGA timing generator.
 //
@@ -43,8 +44,10 @@
 #define ARD_OVR_BAR_PORT_BIT      4
 #define ARD_OVR_BAR_PORT_NAME     D
 
-#define STATUS_LED_PORT_BIT       7
-#define STATUS_LED_PORT_NAME      B
+#define PS2_DATA_PORT_BIT         1
+#define PS2_DATA_PORT_NAME        B
+#define PS2_CLK_PORT_BIT          7 // = PCINT7
+#define PS2_CLK_PORT_NAME         B
 
 // RAM contents
 #define sram_bin ram_contents
@@ -57,7 +60,8 @@ const int h_crunch = 64;
 const int v_crunch = 64;
 
 // Video timing: 640x480 VGA @ 60Hz
-const double dot_clock_freq       = 25.175;           // MHz
+#define DOT_CLOCK 25175000        // Hz
+const double dot_clock_freq       = DOT_CLOCK * 1e-6; // MHz
 
 const int h_visible_area          = 640-2*h_crunch;              // pixels
 const int h_front_porch           = 16+h_crunch;               // pixels
@@ -92,9 +96,18 @@ const double timer_freq           = dot_clock_freq / 2;   // MHz
 // Set by interupt handler if Arduino port is written to
 volatile bool data_in_port = false;
 
+// Set by pin change handler
+volatile uint8_t ps2_data = 0;
+volatile bool ps2_changed = true;
+
 // CPU frequency is half the dot clock. Configure this and include delay header.
-#define F_CPU (unsigned long)((dot_clock_freq / 2) * 1e6)
+#define F_CPU (DOT_CLOCK/2)
+
+// Baud rate of serial
+#define BAUD 9600
+
 #include <util/delay.h>
+#include <util/setbaud.h>
 
 #define PASTER(x,y) x ## y
 #define EVALUATOR(x, y) PASTER(x, y)
@@ -132,7 +145,40 @@ static uint8_t ldir_state = 0;
 static uint8_t next_byte = 0x00;
 static uint16_t ram_bytes_sent;
 
+static FILE uart_output;
+static FILE uart_input;
+
 void set_data(uint8_t data);
+
+int uart_putchar(char c, FILE*) {
+    loop_until_bit_is_set(UCSR0A, UDRE0); /* Wait until data register empty. */
+    UDR0 = c;
+    return 0;
+}
+
+int uart_getchar(FILE*) {
+    loop_until_bit_is_set(UCSR0A, RXC0); /* Wait until data exists. */
+    return UDR0;
+}
+
+void uart_init(void) {
+    UBRR0H = UBRRH_VALUE;
+    UBRR0L = UBRRL_VALUE;
+
+#if USE_2X
+    UCSR0A |= _BV(U2X0);
+#else
+    UCSR0A &= ~(_BV(U2X0));
+#endif
+
+    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
+    UCSR0B = _BV(RXEN0) | _BV(TXEN0);   /* Enable RX and TX */
+
+    fdev_setup_stream(&uart_output, uart_putchar, NULL, _FDEV_SETUP_WRITE);
+    fdev_setup_stream(&uart_input, NULL, uart_getchar, _FDEV_SETUP_READ);
+    stdout = &uart_output;
+    stdin = &uart_input;
+}
 
 void copy_loop_reset() {
   next_byte = 0x00;
@@ -324,6 +370,45 @@ ISR(INT0_vect) {
   data_in_port = true;
 }
 
+ISR(PCINT0_vect) {
+  static bool prev_ps2_clock = true; // high
+  static bool ps2_clk = true; // high
+  static uint8_t n_bits = 0;
+  static uint8_t parity = 0;
+  static uint16_t data = 0;
+
+  ps2_clk = read_pin(PS2_CLK_PORT_NAME, PS2_CLK_PORT_BIT);
+
+  // Read data on *falling* edge
+  if((ps2_clk != prev_ps2_clock) && !ps2_clk) {
+    bool data_pin = read_pin(PS2_DATA_PORT_NAME, PS2_DATA_PORT_BIT);
+    if((n_bits != 0) || !data_pin) {
+      data >>= 1;
+      if(data_pin) {
+        data |= 1<<15;
+        ++parity;
+      }
+      ++n_bits;
+
+      // After 11 bits, data should look like:
+      //
+      // 1 <parity> <8 x data> 000000
+
+      if(n_bits == 11) {
+        // Odd parity plus stop bit means parity should be *even* and high bit
+        // should be set.
+        if(!(parity & 0x1) && data_pin) {
+          ps2_data = data >> 6;
+          ps2_changed = true;
+        }
+        n_bits = 0;
+        parity = 0;
+      }
+    }
+  }
+  prev_ps2_clock = ps2_clk;
+}
+
 void setup_timers() {
   // Reset all timers and halt them
   GTCCR = _BV(TSM) | _BV(PSRASY) | _BV(PSRSYNC);
@@ -420,8 +505,12 @@ void setup_pin_interrupts() {
   // INT0 interrupt triggered by rising edge on ARD_WR_BAR pin.
   EICRA = _BV(ISC01) | _BV(ISC00);
 
+  // PIN0 interrupt triggered by changes on PCINT7
+  PCMSK0 = _BV(PCINT7);
+
   // Enable interrupts
   EIMSK = _BV(INT0);
+  PCICR = _BV(PCIE0);
 }
 
 void setup() {
@@ -443,6 +532,9 @@ void setup() {
   // Reset memory image copy code loop
   copy_loop_reset();
 
+  // Configure UART
+  uart_init();
+
   // re-enable interrupts
   sei();
 
@@ -454,10 +546,6 @@ void setup() {
   // Setup clock override pins
   set_pin_output(OV_CLK_PORT_NAME, OV_CLK_PORT_BIT);
   set_pin_output(CLK_SEL_PORT_NAME, CLK_SEL_PORT_BIT);
-
-  // Setup status LED
-  reset_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
-  set_pin_output(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
 
   // Ensure we are the read device and set up data bus
   set_pin_input(SR_OUT_PORT_NAME, SR_OUT_PORT_BIT);
@@ -496,17 +584,16 @@ void setup() {
 
 void loop() {
   while(1) {
+    if(ps2_changed) {
+      printf("0x%02x\r\n", ps2_data);
+      ps2_changed = false;
+    }
+
     if(data_in_port) {
       disable_arduino_port();
       uint8_t data = read_data();
       enable_arduino_port();
       data_in_port = false;
-
-      if(data & 0x01) {
-        set_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
-      } else {
-        reset_pin(STATUS_LED_PORT_NAME, STATUS_LED_PORT_BIT);
-      }
 
       disable_arduino_port();
       set_data(data);
