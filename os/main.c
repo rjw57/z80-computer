@@ -18,14 +18,14 @@ void main(void) {
   port_a = 0;
 
   gfx_clear_screen();
-  i=0; do { gfx_put_ch(i++); } while(i != 0);
+  i=32; do { gfx_put_ch(i++); } while(i != 128);
   gfx_flip_mask = ~gfx_flip_mask;
-  i=0; do { gfx_put_ch(i++); } while(i != 0);
+  i=32; do { gfx_put_ch(i++); } while(i != 128);
 
   while(1) {
     gfx_point(
         rand() % gfx_screen_width,
-        64 + (rand() % (gfx_screen_height - 64)),
+        24 + (rand() % (gfx_screen_height - 24)),
         GFX_TOGGLE
     );
   }
