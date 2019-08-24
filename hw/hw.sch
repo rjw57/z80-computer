@@ -1338,11 +1338,11 @@ Wire Wire Line
 Wire Wire Line
 	3100 4700 3100 4100
 Wire Wire Line
-	3100 4100 4300 4100
+	3100 4100 4000 4100
 Wire Wire Line
-	4300 4100 4300 4900
+	4000 4100 4000 4900
 Wire Wire Line
-	4300 4900 3900 4900
+	4000 4900 3900 4900
 $Comp
 L Device:R R?
 U 1 1 5DE5D837
@@ -2443,7 +2443,7 @@ Wire Wire Line
 	1200 2300 1200 3400
 Wire Wire Line
 	1200 3400 2000 3400
-Text Label 2000 3400 2    50   ~ 0
+Text Label 1600 3400 0    50   ~ 0
 CLK_OVR
 Text Notes 6750 3650 2    50   ~ 0
 Address Bus
@@ -2451,21 +2451,19 @@ Text Notes 7050 7050 0    50   ~ 0
 Data Bus
 Text Notes 3850 10250 0    50   ~ 0
 AVR Control Bus
-Text Label 3900 4700 0    50   ~ 0
+Text Label 4400 4700 2    50   ~ 0
 CLK_AVR
-Text Label 3300 4800 2    50   ~ 0
-CLK_DOT
 Wire Wire Line
-	2900 4800 2900 5100
+	3000 4800 3000 5100
 Wire Wire Line
-	1500 5100 2900 5100
+	1500 5100 3000 5100
 Wire Wire Line
-	2900 4800 3300 4800
+	3000 4800 3300 4800
 Wire Wire Line
-	2900 4800 2900 4000
+	3000 4800 3000 4000
 Wire Wire Line
-	2900 4000 4400 4000
-Connection ~ 2900 4800
+	3000 4000 4400 4000
+Connection ~ 3000 4800
 Text Label 4400 4000 2    50   ~ 0
 CLK_DOT
 Entry Wire Line
@@ -2556,6 +2554,8 @@ Wire Wire Line
 Connection ~ 3500 9900
 Wire Wire Line
 	3500 9900 3500 10100
+Text Label 1600 4200 0    50   ~ 0
+CLK_DOT
 Wire Bus Line
 	7400 1600 7400 2700
 Wire Bus Line
