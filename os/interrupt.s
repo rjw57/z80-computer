@@ -144,9 +144,15 @@ interrupt::
     nop
     nop
     nop
-
     nop
-    nop
+    ;nop
+
+    ;nop
+    ;nop
+
+    ;xor #0
+    ;nop
+    ;nop
 
     xor #0
     ;nop
@@ -156,9 +162,8 @@ interrupt::
     ;nop
     ;nop
 
-    xor #0
-    ;nop
-    ;nop
+    inc de                  ; 6
+    xor #0                  ; 7
 
     ; Prepare for start of refresh loop
 

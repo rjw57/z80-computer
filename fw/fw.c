@@ -58,15 +58,16 @@ const uint16_t ram_contents_len = sizeof(ram_contents) / sizeof(uint8_t);
 
 const int h_crunch = 64;
 const int v_crunch = 64;
+const int h_shift = 0;
 
 // Video timing: 640x480 VGA @ 60Hz
 #define DOT_CLOCK 25175000        // Hz
 const double dot_clock_freq       = DOT_CLOCK * 1e-6; // MHz
 
 const int h_visible_area          = 640-2*h_crunch;              // pixels
-const int h_front_porch           = 16+h_crunch;               // pixels
+const int h_front_porch           = 16+h_crunch-h_shift;               // pixels
 const int h_sync_width            = 96;               // pixels
-const int h_back_porch            = 48+h_crunch;               // pixels
+const int h_back_porch            = 48+h_crunch+h_shift;               // pixels
 const int h_polarity              = -1;               // sign
 
 const int v_visible_area          = 480-2*v_crunch;              // lines

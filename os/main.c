@@ -9,13 +9,10 @@
 // by the AVR. As such we set clear bit 7 when the port contains data from the
 // CPU to the AVR and the AVR sets bit 7 when it has data for us.
 
-static __sfr __at 0x80 avr_port;
-static __sfr __at 0x81 port_a;
+static __sfr __at 0xa0 avr_port;
 
 void main(void) {
   uint8_t i;
-
-  port_a = 0;
 
   gfx_clear_screen();
   i=32; do { gfx_put_ch(i++); } while(i != 128);
