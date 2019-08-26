@@ -59,13 +59,14 @@ const uint16_t ram_contents_len = sizeof(ram_contents) / sizeof(uint8_t);
 const int h_crunch = 64;
 const int v_crunch = 64;
 const int h_shift = 0;
+const int h_trim = 0;
 
 // Video timing: 640x480 VGA @ 60Hz
 #define DOT_CLOCK 25175000        // Hz
 const double dot_clock_freq       = DOT_CLOCK * 1e-6; // MHz
 
-const int h_visible_area          = 640-2*h_crunch;              // pixels
-const int h_front_porch           = 16+h_crunch-h_shift;               // pixels
+const int h_visible_area          = 640-2*h_crunch-h_trim;              // pixels
+const int h_front_porch           = 16+h_crunch-h_shift+h_trim;               // pixels
 const int h_sync_width            = 96;               // pixels
 const int h_back_porch            = 48+h_crunch+h_shift;               // pixels
 const int h_polarity              = -1;               // sign
@@ -584,20 +585,45 @@ void setup() {
 }
 
 void loop() {
+  uint8_t kbd_buffer = 0x00;
+  bool kbd_buffer_empty = true;
+  uint8_t next_byte = 0x00;
+
   while(1) {
     if(ps2_changed) {
-      printf("0x%02x\r\n", ps2_data);
-      ps2_changed = false;
+      if(kbd_buffer_empty) {
+        kbd_buffer = ps2_data;
+        kbd_buffer_empty = false;
+        ps2_changed = false;
+      }
     }
 
     if(data_in_port) {
       disable_arduino_port();
       uint8_t data = read_data();
-      enable_arduino_port();
-      data_in_port = false;
 
-      disable_arduino_port();
-      set_data(data);
+      //printf("read data: 0x%02x\r\n", data);
+
+      // reponse nibble from command
+      uint8_t response = 0;
+
+      switch(data) {
+        case 0x40: // get next data
+          response = next_byte & 0x0f;
+          next_byte >>= 4;
+          break;
+        case 0x41: // read kbd
+          next_byte = kbd_buffer;
+          response = kbd_buffer_empty ? 0x00 : 0x01;
+          kbd_buffer_empty = true;
+          break;
+        default:   // unknown command, ignore
+          break;
+      }
+
+      set_data(0x80 | (response & 0x0f));
+
+      data_in_port = false;
       enable_arduino_port();
     }
   }

@@ -24,7 +24,7 @@ sram.ihx sram.map: $(OBJECTS) Makefile
 	xxd -ps -c 1 -g 1 "$<" "$@"
 
 %.bin: %.ihx
-	$(MAKEBIN) -s 4096 "$<" "$@"
+	$(MAKEBIN) -s 5120 "$<" "$@"
 
 %.rel: %.s Makefile
 	$(AS) $(ASFLAGS) -o "$*" $<
