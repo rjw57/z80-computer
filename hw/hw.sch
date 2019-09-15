@@ -1006,56 +1006,6 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS04" H 10200 9700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:DB15_Female_HighDensity_MountingHoles J8
-U 1 1 601E9273
-P 12400 5500
-F 0 "J8" H 12400 6367 50  0000 C CNN
-F 1 "VGA" H 12400 6276 50  0000 C CNN
-F 2 "Connector_Dsub:DSUB-15-HD_Female_Horizontal_P2.29x1.98mm_EdgePinOffset3.03mm_Housed_MountingHolesOffset4.94mm" H 11450 5900 50  0001 C CNN
-F 3 " ~" H 11450 5900 50  0001 C CNN
-	1    12400 5500
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12100 5000 12000 5000
-Wire Wire Line
-	12000 5000 12000 5200
-Wire Wire Line
-	12000 5200 12100 5200
-Wire Wire Line
-	12000 5200 12000 5400
-Wire Wire Line
-	12000 5400 12100 5400
-Connection ~ 12000 5200
-Wire Wire Line
-	12000 5400 12000 5800
-Wire Wire Line
-	12000 5900 12100 5900
-Connection ~ 12000 5400
-Wire Wire Line
-	12100 5800 12000 5800
-Connection ~ 12000 5800
-Wire Wire Line
-	12000 5800 12000 5900
-NoConn ~ 12100 5700
-NoConn ~ 12100 5600
-NoConn ~ 12700 5100
-NoConn ~ 12700 5300
-NoConn ~ 12700 5900
-$Comp
-L power:GND #PWR049
-U 1 1 603ABD78
-P 12400 6300
-F 0 "#PWR049" H 12400 6050 50  0001 C CNN
-F 1 "GND" H 12405 6127 50  0000 C CNN
-F 2 "" H 12400 6300 50  0001 C CNN
-F 3 "" H 12400 6300 50  0001 C CNN
-	1    12400 6300
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12400 6200 12400 6300
-$Comp
 L power:GND #PWR048
 U 1 1 603CF170
 P 12000 6000
@@ -1066,9 +1016,6 @@ F 3 "" H 12000 6000 50  0001 C CNN
 	1    12000 6000
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	12000 5900 12000 6000
-Connection ~ 12000 5900
 $Comp
 L Device:R R4
 U 1 1 603F2704
@@ -1102,12 +1049,6 @@ F 3 "~" H 11750 5500 50  0001 C CNN
 	1    11750 5500
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	11900 5100 12100 5100
-Wire Wire Line
-	12100 5300 11900 5300
-Wire Wire Line
-	11900 5500 12100 5500
 Wire Wire Line
 	11400 5100 11500 5100
 Wire Wire Line
@@ -1366,7 +1307,7 @@ L Device:R_Network08_US RN1
 U 1 1 5E64502A
 P 10400 7300
 F 0 "RN1" V 10917 7300 50  0000 C CNN
-F 1 "1K" V 10826 7300 50  0000 C CNN
+F 1 "R_Network08_US" V 10826 7300 50  0000 C CNN
 F 2 "Resistor_THT:R_Array_SIP9" V 10875 7300 50  0001 C CNN
 F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 10400 7300 50  0001 C CNN
 	1    10400 7300
@@ -1692,21 +1633,21 @@ Entry Wire Line
 	7400 10000 7300 10100
 Wire Wire Line
 	7000 8400 7000 9200
-Text Label 9800 6900 0    50   ~ 0
-D0
-Text Label 9800 7000 0    50   ~ 0
-D1
-Text Label 9800 7100 0    50   ~ 0
-D2
-Text Label 9800 7200 0    50   ~ 0
-D3
-Text Label 9800 7300 0    50   ~ 0
-D4
-Text Label 9800 7400 0    50   ~ 0
-D5
-Text Label 9800 7500 0    50   ~ 0
-D6
 Text Label 9800 7600 0    50   ~ 0
+D0
+Text Label 9800 7500 0    50   ~ 0
+D1
+Text Label 9800 7400 0    50   ~ 0
+D2
+Text Label 9800 7300 0    50   ~ 0
+D3
+Text Label 9800 7200 0    50   ~ 0
+D4
+Text Label 9800 7100 0    50   ~ 0
+D5
+Text Label 9800 7000 0    50   ~ 0
+D6
+Text Label 9800 6900 0    50   ~ 0
 D7
 Entry Wire Line
 	9700 7700 9800 7600
@@ -1725,21 +1666,21 @@ Entry Wire Line
 Entry Wire Line
 	9700 7000 9800 6900
 Wire Wire Line
-	9800 6900 10200 6900
-Wire Wire Line
-	9800 7000 10200 7000
-Wire Wire Line
-	9800 7100 10200 7100
-Wire Wire Line
-	9800 7200 10200 7200
-Wire Wire Line
-	9800 7300 10200 7300
-Wire Wire Line
-	9800 7400 10200 7400
+	9800 7600 10200 7600
 Wire Wire Line
 	9800 7500 10200 7500
 Wire Wire Line
-	9800 7600 10200 7600
+	9800 7400 10200 7400
+Wire Wire Line
+	9800 7300 10200 7300
+Wire Wire Line
+	9800 7200 10200 7200
+Wire Wire Line
+	9800 7100 10200 7100
+Wire Wire Line
+	9800 7000 10200 7000
+Wire Wire Line
+	9800 6900 10200 6900
 Entry Bus Bus
 	7500 7900 7400 8000
 Text Label 3600 8900 0    50   ~ 0
@@ -2208,10 +2149,8 @@ Wire Wire Line
 	10900 9700 10500 9700
 Text Label 10500 9700 0    50   ~ 0
 ~DPY_PL
-Text Label 12700 5500 0    50   ~ 0
+Text Label 11900 5700 2    50   ~ 0
 HSYNC
-Wire Wire Line
-	12700 5500 13100 5500
 Wire Wire Line
 	8800 9000 9200 9000
 Text Label 8850 9000 0    50   ~ 0
@@ -2224,11 +2163,6 @@ Wire Wire Line
 	11500 8300 11500 6800
 Wire Wire Line
 	11500 6800 13100 6800
-Wire Wire Line
-	13100 6800 13100 5500
-Wire Wire Line
-	13100 4300 13100 5500
-Connection ~ 13100 5500
 Text Label 13100 4300 3    50   ~ 0
 HSYNC
 Text Label 5300 1600 0    50   ~ 0
@@ -2269,21 +2203,21 @@ F 3 "~" H 10200 4100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8700 3000 8900 3000
+	8500 3800 8300 3800
 Wire Wire Line
-	8900 3100 8700 3100
+	8300 3900 8500 3900
 Wire Wire Line
-	8700 3200 8900 3200
+	8500 4000 8300 4000
 Wire Wire Line
-	8900 3300 8700 3300
+	8300 4100 8500 4100
 Wire Wire Line
-	8700 3400 8900 3400
+	8500 4200 8300 4200
 Wire Wire Line
-	8900 3500 8700 3500
+	8300 4300 8500 4300
 Wire Wire Line
-	8700 3600 8900 3600
+	8500 4400 8300 4400
 Wire Wire Line
-	8900 3700 8700 3700
+	8300 4500 8500 4500
 Wire Wire Line
 	8700 3800 8900 3800
 Wire Wire Line
@@ -2300,21 +2234,21 @@ Wire Wire Line
 	8700 4400 8900 4400
 Wire Wire Line
 	8700 4500 8900 4500
-Text Label 8900 3000 2    50   ~ 0
+Text Label 8300 3800 0    50   ~ 0
 A0
-Text Label 8900 3100 2    50   ~ 0
+Text Label 8300 3900 0    50   ~ 0
 A1
-Text Label 8900 3200 2    50   ~ 0
+Text Label 8300 4000 0    50   ~ 0
 A2
-Text Label 8900 3300 2    50   ~ 0
+Text Label 8300 4100 0    50   ~ 0
 A3
-Text Label 8900 3400 2    50   ~ 0
+Text Label 8300 4200 0    50   ~ 0
 A4
-Text Label 8900 3500 2    50   ~ 0
+Text Label 8300 4300 0    50   ~ 0
 A5
-Text Label 8900 3600 2    50   ~ 0
+Text Label 8300 4400 0    50   ~ 0
 A6
-Text Label 8900 3700 2    50   ~ 0
+Text Label 8300 4500 0    50   ~ 0
 A7
 Text Label 8900 3800 2    50   ~ 0
 A8
@@ -2349,21 +2283,21 @@ Entry Wire Line
 Entry Wire Line
 	8600 4600 8700 4500
 Entry Wire Line
-	8600 3700 8700 3600
+	8600 4500 8500 4400
 Entry Wire Line
-	8600 3600 8700 3500
+	8600 4400 8500 4300
 Entry Wire Line
-	8600 3500 8700 3400
+	8600 4300 8500 4200
 Entry Wire Line
-	8600 3400 8700 3300
+	8600 4200 8500 4100
 Entry Wire Line
-	8600 3300 8700 3200
+	8600 4100 8500 4000
 Entry Wire Line
-	8600 3200 8700 3100
+	8600 4000 8500 3900
 Entry Wire Line
-	8600 3100 8700 3000
+	8600 3900 8500 3800
 Entry Wire Line
-	8600 3800 8700 3700
+	8600 4600 8500 4500
 Entry Bus Bus
 	8600 4700 8500 4800
 Entry Bus Bus
@@ -2549,12 +2483,10 @@ Text Label 8500 2800 0    50   ~ 0
 VSYNC
 Entry Wire Line
 	8500 2800 8400 2700
-Text Label 12700 5700 0    50   ~ 0
+Text Label 11900 5800 2    50   ~ 0
 VSYNC
 Wire Wire Line
-	13900 2800 13900 5700
-Wire Wire Line
-	12700 5700 13900 5700
+	13900 2800 13900 6600
 Wire Wire Line
 	8500 2800 13900 2800
 Text Label 11600 2300 0    50   ~ 0
@@ -3165,17 +3097,6 @@ Connection ~ 8100 9600
 Wire Wire Line
 	8100 9600 9200 9600
 $Comp
-L Connector_Generic:Conn_01x16 J5
-U 1 1 5D832C01
-P 9100 3700
-F 0 "J5" H 9179 3692 50  0000 L CNN
-F 1 "A[0..15]" H 9179 3601 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x16_P2.54mm_Vertical" H 9100 3700 50  0001 C CNN
-F 3 "~" H 9100 3700 50  0001 C CNN
-	1    9100 3700
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector:TestPoint M1
 U 1 1 5DA2A82F
 P 15100 900
@@ -3271,6 +3192,72 @@ F 3 "" H 15600 1550 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	15600 1450 15600 1550
+$Comp
+L Connector_Generic:Conn_01x08 J6
+U 1 1 5DB481F8
+P 9100 4100
+F 0 "J6" H 9179 4092 50  0000 L CNN
+F 1 "A[8..15]" H 9179 4001 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 9100 4100 50  0001 C CNN
+F 3 "~" H 9100 4100 50  0001 C CNN
+	1    9100 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x08 J5
+U 1 1 5DB48345
+P 8100 4100
+F 0 "J5" H 8150 4100 50  0000 L CNN
+F 1 "A[0..7]" H 8150 4000 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 8100 4100 50  0001 C CNN
+F 3 "~" H 8100 4100 50  0001 C CNN
+	1    8100 4100
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x08 J8
+U 1 1 5DD0C8F6
+P 12300 5400
+F 0 "J8" H 12379 5392 50  0000 L CNN
+F 1 "VGA" H 12379 5301 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 12300 5400 50  0001 C CNN
+F 3 "~" H 12300 5400 50  0001 C CNN
+	1    12300 5400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11900 5100 12100 5100
+Wire Wire Line
+	12100 5300 11900 5300
+Wire Wire Line
+	11900 5500 12100 5500
+Wire Wire Line
+	12000 6000 12000 5600
+Wire Wire Line
+	12000 5200 12100 5200
+Wire Wire Line
+	12100 5400 12000 5400
+Connection ~ 12000 5400
+Wire Wire Line
+	12000 5400 12000 5200
+Wire Wire Line
+	12100 5600 12000 5600
+Connection ~ 12000 5600
+Wire Wire Line
+	12000 5600 12000 5400
+Wire Wire Line
+	12100 5700 11500 5700
+Wire Wire Line
+	11500 5700 11500 6800
+Connection ~ 11500 6800
+Wire Wire Line
+	13100 4300 13100 6800
+Wire Wire Line
+	11600 6600 11600 5800
+Wire Wire Line
+	11600 5800 12100 5800
+Wire Wire Line
+	11600 6600 13900 6600
 Wire Bus Line
 	5700 4500 7300 4500
 Wire Bus Line
@@ -3279,6 +3266,8 @@ Wire Bus Line
 	5000 800  5000 6000
 Wire Bus Line
 	7400 8000 7400 10000
+Wire Bus Line
+	8600 3900 8600 4700
 Wire Bus Line
 	9400 1000 9400 3500
 Wire Bus Line
@@ -3289,8 +3278,6 @@ Wire Bus Line
 	7900 5000 7900 6500
 Wire Bus Line
 	4200 6200 4200 10800
-Wire Bus Line
-	8600 3100 8600 4700
 Wire Bus Line
 	7400 5000 7400 6600
 Wire Bus Line
