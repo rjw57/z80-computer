@@ -1335,7 +1335,7 @@ $EndComp
 Wire Wire Line
 	8500 8700 8500 8800
 Wire Wire Line
-	8100 9500 8500 9500
+	8800 9500 8500 9500
 Wire Wire Line
 	8500 9500 8500 9400
 $Comp
@@ -1352,41 +1352,41 @@ $EndComp
 $Comp
 L power:+5V #PWR035
 U 1 1 5E5B3D83
-P 8100 9500
-F 0 "#PWR035" H 8100 9350 50  0001 C CNN
-F 1 "+5V" H 8115 9673 50  0000 C CNN
-F 2 "" H 8100 9500 50  0001 C CNN
-F 3 "" H 8100 9500 50  0001 C CNN
-	1    8100 9500
+P 8800 9500
+F 0 "#PWR035" H 8800 9350 50  0001 C CNN
+F 1 "+5V" H 8815 9673 50  0000 C CNN
+F 2 "" H 8800 9500 50  0001 C CNN
+F 3 "" H 8800 9500 50  0001 C CNN
+	1    8800 9500
 	1    0    0    -1  
 $EndComp
 NoConn ~ 8800 9200
 $Comp
 L Device:R_Network08_US RN1
 U 1 1 5E64502A
-P 10400 7200
-F 0 "RN1" V 10917 7200 50  0000 C CNN
-F 1 "R_Network08_US" V 10826 7200 50  0000 C CNN
-F 2 "Resistor_THT:R_Array_SIP9" V 10875 7200 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 10400 7200 50  0001 C CNN
-	1    10400 7200
-	0    1    -1   0   
+P 10400 7300
+F 0 "RN1" V 10917 7300 50  0000 C CNN
+F 1 "1K" V 10826 7300 50  0000 C CNN
+F 2 "Resistor_THT:R_Array_SIP9" V 10875 7300 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 10400 7300 50  0001 C CNN
+	1    10400 7300
+	0    1    1    0   
 $EndComp
 $Comp
 L power:GND #PWR045
 U 1 1 5E645031
-P 10700 7700
-F 0 "#PWR045" H 10700 7450 50  0001 C CNN
-F 1 "GND" H 10705 7527 50  0000 C CNN
-F 2 "" H 10700 7700 50  0001 C CNN
-F 3 "" H 10700 7700 50  0001 C CNN
-	1    10700 7700
+P 10700 7000
+F 0 "#PWR045" H 10700 6750 50  0001 C CNN
+F 1 "GND" H 10705 6827 50  0000 C CNN
+F 2 "" H 10700 7000 50  0001 C CNN
+F 3 "" H 10700 7000 50  0001 C CNN
+	1    10700 7000
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10600 7600 10700 7600
+	10600 6900 10700 6900
 Wire Wire Line
-	10700 7600 10700 7700
+	10700 6900 10700 7000
 Wire Wire Line
 	10600 2400 11000 2400
 Wire Wire Line
@@ -1568,21 +1568,21 @@ Entry Wire Line
 	7400 7100 7300 7000
 Entry Wire Line
 	7400 7000 7300 6900
-Text Label 9600 5900 2    50   ~ 0
+Text Label 9600 5600 2    50   ~ 0
 D4
-Text Label 9600 5800 2    50   ~ 0
+Text Label 9600 5500 2    50   ~ 0
 D3
 Text Label 9600 5700 2    50   ~ 0
 D5
-Text Label 9600 5600 2    50   ~ 0
+Text Label 9600 5800 2    50   ~ 0
 D6
-Text Label 9600 5500 2    50   ~ 0
+Text Label 9600 5400 2    50   ~ 0
 D2
 Text Label 9600 5300 2    50   ~ 0
 D1
-Text Label 9600 5400 2    50   ~ 0
-D0
 Text Label 9600 5200 2    50   ~ 0
+D0
+Text Label 9600 5900 2    50   ~ 0
 D7
 Entry Wire Line
 	9700 6000 9600 5900
@@ -2146,14 +2146,12 @@ Wire Wire Line
 	3500 4700 4900 4700
 Entry Wire Line
 	5000 4800 4900 4700
-Text Label 8200 9000 2    50   ~ 0
+Text Label 7700 9000 0    50   ~ 0
 HSYNC_RAW
-Text Label 8200 9100 2    50   ~ 0
+Text Label 7700 9600 0    50   ~ 0
 CHAR_TC
 Text Label 7700 9800 0    50   ~ 0
 VIS_RAW
-Wire Wire Line
-	7700 9100 7800 9100
 Wire Wire Line
 	7700 9000 8200 9000
 Entry Wire Line
@@ -2161,7 +2159,7 @@ Entry Wire Line
 Entry Wire Line
 	7400 9300 7300 9400
 Entry Wire Line
-	7700 9100 7600 9200
+	7700 9600 7600 9700
 Entry Wire Line
 	7700 9000 7600 9100
 Entry Wire Line
@@ -2184,13 +2182,6 @@ Wire Wire Line
 	11800 4000 12100 4000
 Wire Wire Line
 	10800 1900 10800 2200
-Wire Wire Line
-	7800 9100 7800 9600
-Wire Wire Line
-	7800 9600 9200 9600
-Connection ~ 7800 9100
-Wire Wire Line
-	7800 9100 8200 9100
 Text Label 8200 8100 2    50   ~ 0
 CLK_DOT
 Entry Wire Line
@@ -2267,28 +2258,6 @@ Wire Wire Line
 Wire Wire Line
 	7100 1600 7750 1600
 $Comp
-L Connector_Generic:Conn_01x08 J5
-U 1 1 637D02E4
-P 8100 4100
-F 0 "J5" H 8179 4092 50  0000 L CNN
-F 1 "A[0..7]" H 8179 4001 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 8100 4100 50  0001 C CNN
-F 3 "~" H 8100 4100 50  0001 C CNN
-	1    8100 4100
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Connector_Generic:Conn_01x08 J6
-U 1 1 637D0430
-P 9100 4100
-F 0 "J6" H 9179 4092 50  0000 L CNN
-F 1 "A[8..15]" H 9179 4001 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 9100 4100 50  0001 C CNN
-F 3 "~" H 9100 4100 50  0001 C CNN
-	1    9100 4100
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector_Generic:Conn_01x08 J7
 U 1 1 637D0563
 P 10200 4100
@@ -2300,21 +2269,21 @@ F 3 "~" H 10200 4100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8500 3800 8300 3800
+	8700 3000 8900 3000
 Wire Wire Line
-	8300 3900 8500 3900
+	8900 3100 8700 3100
 Wire Wire Line
-	8500 4000 8300 4000
+	8700 3200 8900 3200
 Wire Wire Line
-	8300 4100 8500 4100
+	8900 3300 8700 3300
 Wire Wire Line
-	8500 4200 8300 4200
+	8700 3400 8900 3400
 Wire Wire Line
-	8300 4300 8500 4300
+	8900 3500 8700 3500
 Wire Wire Line
-	8500 4400 8300 4400
+	8700 3600 8900 3600
 Wire Wire Line
-	8300 4500 8500 4500
+	8900 3700 8700 3700
 Wire Wire Line
 	8700 3800 8900 3800
 Wire Wire Line
@@ -2331,21 +2300,21 @@ Wire Wire Line
 	8700 4400 8900 4400
 Wire Wire Line
 	8700 4500 8900 4500
-Text Label 8300 3800 0    50   ~ 0
+Text Label 8900 3000 2    50   ~ 0
 A0
-Text Label 8300 3900 0    50   ~ 0
+Text Label 8900 3100 2    50   ~ 0
 A1
-Text Label 8300 4000 0    50   ~ 0
+Text Label 8900 3200 2    50   ~ 0
 A2
-Text Label 8300 4100 0    50   ~ 0
+Text Label 8900 3300 2    50   ~ 0
 A3
-Text Label 8300 4200 0    50   ~ 0
+Text Label 8900 3400 2    50   ~ 0
 A4
-Text Label 8300 4300 0    50   ~ 0
+Text Label 8900 3500 2    50   ~ 0
 A5
-Text Label 8300 4400 0    50   ~ 0
+Text Label 8900 3600 2    50   ~ 0
 A6
-Text Label 8300 4500 0    50   ~ 0
+Text Label 8900 3700 2    50   ~ 0
 A7
 Text Label 8900 3800 2    50   ~ 0
 A8
@@ -2380,21 +2349,21 @@ Entry Wire Line
 Entry Wire Line
 	8600 4600 8700 4500
 Entry Wire Line
-	8600 4500 8500 4400
+	8600 3700 8700 3600
 Entry Wire Line
-	8600 4400 8500 4300
+	8600 3600 8700 3500
 Entry Wire Line
-	8600 4300 8500 4200
+	8600 3500 8700 3400
 Entry Wire Line
-	8600 4200 8500 4100
+	8600 3400 8700 3300
 Entry Wire Line
-	8600 4100 8500 4000
+	8600 3300 8700 3200
 Entry Wire Line
-	8600 4000 8500 3900
+	8600 3200 8700 3100
 Entry Wire Line
-	8600 3900 8500 3800
+	8600 3100 8700 3000
 Entry Wire Line
-	8600 4600 8500 4500
+	8600 3800 8700 3700
 Entry Bus Bus
 	8600 4700 8500 4800
 Entry Bus Bus
@@ -2571,29 +2540,29 @@ Wire Wire Line
 Text Label 8200 7000 2    50   ~ 0
 ~WR
 Wire Wire Line
-	7650 2800 7650 6900
+	7650 2600 7650 6900
 Wire Wire Line
 	7650 6900 8200 6900
 Text Label 8200 6900 2    50   ~ 0
 ~RAM_OE
-Text Label 8500 3100 0    50   ~ 0
+Text Label 8500 2800 0    50   ~ 0
 VSYNC
 Entry Wire Line
-	8500 3100 8400 3000
+	8500 2800 8400 2700
 Text Label 12700 5700 0    50   ~ 0
 VSYNC
 Wire Wire Line
-	13900 3100 13900 5700
+	13900 2800 13900 5700
 Wire Wire Line
 	12700 5700 13900 5700
 Wire Wire Line
-	8500 3100 13900 3100
+	8500 2800 13900 2800
 Text Label 11600 2300 0    50   ~ 0
 ~RAM_OE
 Wire Wire Line
-	12000 2800 12000 2300
+	12000 2600 12000 2300
 Wire Wire Line
-	7650 2800 12000 2800
+	7650 2600 12000 2600
 Text Label 8500 1100 0    50   ~ 0
 ~AVR_OVR
 Entry Wire Line
@@ -3097,111 +3066,6 @@ $EndComp
 Wire Wire Line
 	700  5850 700  5950
 $Comp
-L power:+5V #PWR083
-U 1 1 66FF7B59
-P 15300 1000
-F 0 "#PWR083" H 15300 850 50  0001 C CNN
-F 1 "+5V" H 15315 1173 50  0000 C CNN
-F 2 "" H 15300 1000 50  0001 C CNN
-F 3 "" H 15300 1000 50  0001 C CNN
-	1    15300 1000
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	15300 1000 15300 1100
-$Comp
-L power:GND #PWR082
-U 1 1 66FF7B60
-P 14800 1700
-F 0 "#PWR082" H 14800 1450 50  0001 C CNN
-F 1 "GND" H 14805 1527 50  0000 C CNN
-F 2 "" H 14800 1700 50  0001 C CNN
-F 3 "" H 14800 1700 50  0001 C CNN
-	1    14800 1700
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Regulator_Linear:L7805 U13
-U 1 1 670303F4
-P 14800 1100
-F 0 "U13" H 14800 1342 50  0000 C CNN
-F 1 "L7805" H 14800 1251 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-220F-3_Horizontal_TabDown" H 14825 950 50  0001 L CIN
-F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf" H 14800 1050 50  0001 C CNN
-	1    14800 1100
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:Barrel_Jack_MountingPin J9
-U 1 1 670305B7
-P 13700 1200
-F 0 "J9" H 13755 1517 50  0000 C CNN
-F 1 "POWER" H 13755 1426 50  0000 C CNN
-F 2 "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal" H 13750 1160 50  0001 C CNN
-F 3 "~" H 13750 1160 50  0001 C CNN
-	1    13700 1200
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	14000 1300 14100 1300
-Wire Wire Line
-	14100 1300 14100 1600
-Wire Wire Line
-	14100 1600 13700 1600
-Wire Wire Line
-	13700 1600 13700 1500
-Connection ~ 14100 1600
-Wire Wire Line
-	14800 1400 14800 1600
-$Comp
-L Device:CP C13
-U 1 1 672A4910
-P 14300 1350
-F 0 "C13" H 14418 1396 50  0000 L CNN
-F 1 "100u" H 14418 1305 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 14338 1200 50  0001 C CNN
-F 3 "~" H 14300 1350 50  0001 C CNN
-	1    14300 1350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	14000 1100 14300 1100
-Wire Wire Line
-	14300 1100 14300 1200
-Connection ~ 14300 1100
-Wire Wire Line
-	14300 1100 14500 1100
-Wire Wire Line
-	14300 1500 14300 1600
-Connection ~ 14300 1600
-Wire Wire Line
-	14300 1600 14100 1600
-$Comp
-L Device:CP C14
-U 1 1 67351E1A
-P 15300 1350
-F 0 "C14" H 15418 1396 50  0000 L CNN
-F 1 "100u" H 15418 1305 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 15338 1200 50  0001 C CNN
-F 3 "~" H 15300 1350 50  0001 C CNN
-	1    15300 1350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	15100 1100 15300 1100
-Wire Wire Line
-	15300 1100 15300 1200
-Connection ~ 15300 1100
-Wire Wire Line
-	15300 1500 15300 1600
-Wire Wire Line
-	15300 1600 14800 1600
-Connection ~ 14800 1600
-Wire Wire Line
-	14800 1600 14800 1700
-Wire Wire Line
-	14300 1600 14800 1600
-$Comp
 L Connector_Generic:Conn_02x04_Odd_Even J1
 U 1 1 6756573C
 P 2900 6700
@@ -3291,6 +3155,122 @@ Wire Wire Line
 	11900 9300 11900 9500
 Wire Wire Line
 	7700 9800 9200 9800
+Wire Wire Line
+	7700 9600 8100 9600
+Wire Wire Line
+	8100 9600 8100 9100
+Wire Wire Line
+	8100 9100 8200 9100
+Connection ~ 8100 9600
+Wire Wire Line
+	8100 9600 9200 9600
+$Comp
+L Connector_Generic:Conn_01x16 J5
+U 1 1 5D832C01
+P 9100 3700
+F 0 "J5" H 9179 3692 50  0000 L CNN
+F 1 "A[0..15]" H 9179 3601 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x16_P2.54mm_Vertical" H 9100 3700 50  0001 C CNN
+F 3 "~" H 9100 3700 50  0001 C CNN
+	1    9100 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint M1
+U 1 1 5DA2A82F
+P 15100 900
+F 0 "M1" H 15158 1020 50  0000 L CNN
+F 1 "MOUNT" H 15158 929 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm_Pad_Via" H 15300 900 50  0001 C CNN
+F 3 "~" H 15300 900 50  0001 C CNN
+	1    15100 900 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR012
+U 1 1 5DA2A926
+P 15100 1000
+F 0 "#PWR012" H 15100 750 50  0001 C CNN
+F 1 "GND" H 15105 827 50  0000 C CNN
+F 2 "" H 15100 1000 50  0001 C CNN
+F 3 "" H 15100 1000 50  0001 C CNN
+	1    15100 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15100 900  15100 1000
+$Comp
+L Connector:TestPoint M3
+U 1 1 5DA62E0E
+P 15600 900
+F 0 "M3" H 15658 1020 50  0000 L CNN
+F 1 "MOUNT" H 15658 929 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm_Pad_Via" H 15800 900 50  0001 C CNN
+F 3 "~" H 15800 900 50  0001 C CNN
+	1    15600 900 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR036
+U 1 1 5DA62E15
+P 15600 1000
+F 0 "#PWR036" H 15600 750 50  0001 C CNN
+F 1 "GND" H 15605 827 50  0000 C CNN
+F 2 "" H 15600 1000 50  0001 C CNN
+F 3 "" H 15600 1000 50  0001 C CNN
+	1    15600 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15600 900  15600 1000
+$Comp
+L Connector:TestPoint M2
+U 1 1 5DA9AEC4
+P 15100 1450
+F 0 "M2" H 15158 1570 50  0000 L CNN
+F 1 "MOUNT" H 15158 1479 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm_Pad_Via" H 15300 1450 50  0001 C CNN
+F 3 "~" H 15300 1450 50  0001 C CNN
+	1    15100 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR017
+U 1 1 5DA9AECB
+P 15100 1550
+F 0 "#PWR017" H 15100 1300 50  0001 C CNN
+F 1 "GND" H 15105 1377 50  0000 C CNN
+F 2 "" H 15100 1550 50  0001 C CNN
+F 3 "" H 15100 1550 50  0001 C CNN
+	1    15100 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15100 1450 15100 1550
+$Comp
+L Connector:TestPoint M4
+U 1 1 5DA9AED2
+P 15600 1450
+F 0 "M4" H 15658 1570 50  0000 L CNN
+F 1 "MOUNT" H 15658 1479 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm_Pad_Via" H 15800 1450 50  0001 C CNN
+F 3 "~" H 15800 1450 50  0001 C CNN
+	1    15600 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR040
+U 1 1 5DA9AED9
+P 15600 1550
+F 0 "#PWR040" H 15600 1300 50  0001 C CNN
+F 1 "GND" H 15605 1377 50  0000 C CNN
+F 2 "" H 15600 1550 50  0001 C CNN
+F 3 "" H 15600 1550 50  0001 C CNN
+	1    15600 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	15600 1450 15600 1550
 Wire Bus Line
 	5700 4500 7300 4500
 Wire Bus Line
@@ -3299,8 +3279,6 @@ Wire Bus Line
 	5000 800  5000 6000
 Wire Bus Line
 	7400 8000 7400 10000
-Wire Bus Line
-	8600 3900 8600 4700
 Wire Bus Line
 	9400 1000 9400 3500
 Wire Bus Line
@@ -3311,6 +3289,8 @@ Wire Bus Line
 	7900 5000 7900 6500
 Wire Bus Line
 	4200 6200 4200 10800
+Wire Bus Line
+	8600 3100 8600 4700
 Wire Bus Line
 	7400 5000 7400 6600
 Wire Bus Line
